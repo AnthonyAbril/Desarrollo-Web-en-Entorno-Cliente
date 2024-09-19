@@ -8,5 +8,4 @@ while (impares<10) {
         impares++;
         document.writeln(numeros);
     }
-
 }
