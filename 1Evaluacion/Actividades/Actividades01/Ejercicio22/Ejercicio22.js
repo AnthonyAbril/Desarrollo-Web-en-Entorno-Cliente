@@ -1,11 +1,13 @@
 //Pedir números hasta que se introduzca uno negativo, y calcular la media. 
 
-var n = prompt("Introduzca un numero");
+var n = 0;
 var a = [];
+var suma = 0;
 
-while (n!=0) {
-    n = prompt("Introduzca un numero");
-    a = n;
+while (n>=0) {
+    n = parseInt(prompt("Introduzca un numero"));
+    suma += n;
+    a[a.length] = n;
 }
 
-alert(contador);
+alert(suma/(a.length));
