@@ -10,22 +10,27 @@ function introducirCodigo(codigo){
         if (codigo == libro[0])
            return (libro);
     }
-    return "El libro solicitado no existe!!";
 }
 
 function mostrarLibro(libro) {
-    let lista = "";
-    let titulo = ["Código", "Título", "Autor", "Editorial", "Tema", "ISBN", "Páginas", "Precio"];
-    
-    lista += "<table border=1>";  
-    for (let index = 0; index < titulo.length; index++) {
-        lista += "<tr>"
-            +"  <th>"+titulo[index]+"</th>"
-            +"  <td>"+libro[index]+"</td>"
-            +"</tr>"
+
+    if (libro != null) {
+        let lista = "";
+        let titulo = ["Código", "Título", "Autor", "Editorial", "Tema", "ISBN", "Páginas", "Precio"];
+        
+        lista += "<table border=1>";  
+        for (let index = 0; index < titulo.length; index++) {
+            lista += "<tr>"
+                +"  <th>"+titulo[index]+"</th>"
+                +"  <td>"+libro[index]+"</td>"
+                +"</tr>"
+        }
+        lista += "</table>";
+        return lista;
+    } else {
+        return "El libro no existe!!"
     }
-    lista += "</table>";
-    return lista;
+    
 }
 
 var libro = (introducirCodigo(parseInt(prompt("Introduce el codigo"))));
