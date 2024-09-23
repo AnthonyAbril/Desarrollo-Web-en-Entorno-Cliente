@@ -14,17 +14,24 @@ function introducirCodigo(codigo){
 }
 
 function mostrarLibro(libro) {
+    let lista = "";
     let titulo = ["Código", "Título", "Autor", "Editorial", "Tema", "ISBN", "Páginas", "Precio"];
-
-    for (let lineas of libro) {
-        if (codigo == lineas[0])
+    
+    lista += "<table border=1>";  
+    for (let index = 0; index < titulo.length; index++) {
+        lista += "<tr>"
+            +"  <th>"+titulo[index]+"</th>"
+            +"  <td>"+libro[index]+"</td>"
+            +"</tr>"
     }
+    lista += "</table>";
+    return lista;
 }
 
 var libro = (introducirCodigo(parseInt(prompt("Introduce el codigo"))));
+document.documentElement.innerHTML = mostrarLibro(libro);
 
-
-
+/*
 document.documentElement.innerHTML =    
 "<table border=1>"
 +"<tr>"
@@ -59,4 +66,4 @@ document.documentElement.innerHTML =
 +"  <th>Precio</th>"
 +"  <td>"+libro[8]+"</td>"
 +"</tr>"
-+"</table>";
++"</table>";*/
