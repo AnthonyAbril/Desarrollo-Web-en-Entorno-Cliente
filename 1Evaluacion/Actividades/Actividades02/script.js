@@ -5,7 +5,7 @@ libros[1] = [2, "Salud", "Eduardo Almansa", "Deusto", "Medicina", "24-3547-590-1
 libros[2] = [3, "Redes de Computadores", "Luis Cárcel", "Paraninfo", "Informatica", "47-8829-435-7", 215, 32.86];
 
 function introducirCodigo(codigo){
-
+    //Busca el libro que coincida con el codigo
     for (let libro of libros) {
         if (codigo == libro[0])
            return (libro);
@@ -13,12 +13,13 @@ function introducirCodigo(codigo){
 }
 
 function mostrarLibro(libro) {
-
+    //si hay un libro que coincida con el codigo lo escribira con una tabla html
     if (libro != null) {
         let lista = "";
         let titulo = ["Código", "Título", "Autor", "Editorial", "Tema", "ISBN", "Páginas", "Precio"];
         
         lista += "<table border=1>";  
+        //hace una fila de tabla por cada atributo a mostrar incluyendole su titulo
         for (let index = 0; index < titulo.length; index++) {
             lista += "<tr>"
                 +"  <th>"+titulo[index]+"</th>"
@@ -28,13 +29,15 @@ function mostrarLibro(libro) {
         lista += "</table>";
         return lista;
     } else {
+        //si no ha encontrado un libro que coincida con el codigo dira que no existe
         return "El libro solicitado no existe!!";
     }
     
 }
 
-var libro = (introducirCodigo(parseInt(prompt("Introduce el codigo"))));
-document.documentElement.innerHTML = mostrarLibro(libro);
+var libro = (introducirCodigo(parseInt(prompt("Introduce el codigo"))));//pedimos el codigo del libro y guardamos el libro
+
+document.documentElement.innerHTML = mostrarLibro(libro);//mostrara la tabla html con los datos del libro
 
 /*
 document.documentElement.innerHTML =    
