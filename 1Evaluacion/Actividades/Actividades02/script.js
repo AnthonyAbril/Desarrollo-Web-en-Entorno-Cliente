@@ -28,7 +28,7 @@ function mostrarLibro(libro) {
         lista += "</table>";
         return lista;
     } else {
-        return "El libro no existe!!"
+        return "El libro solicitado no existe!!";
     }
     
 }
