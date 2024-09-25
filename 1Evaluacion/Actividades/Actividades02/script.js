@@ -32,7 +32,6 @@ function mostrarLibro(libro) {
         //si no ha encontrado un libro que coincida con el codigo dira que no existe
         return "El libro solicitado no existe!!";
     }
-    
 }
 
 var libro = (introducirCodigo(parseInt(prompt("Introduce el codigo"))));//pedimos el codigo del libro y guardamos el libro
