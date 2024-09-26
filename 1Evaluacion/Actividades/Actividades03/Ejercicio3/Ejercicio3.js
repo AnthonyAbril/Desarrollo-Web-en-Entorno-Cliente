@@ -1,17 +1,21 @@
-//Mostrar una fecha con formato DiaSemana, DiaMes de Mes del Año a las horas:minutos:segundos. 
-//Por ejemplo:  Miercoles, 9 de Diciembre del 2015 a las 18:45:32. 
+//Suma 10 años, 4 meses y 5 días a la fecha actual.
 
-//Guardamos la fecha
-var fecha = new Date();
+//Guardamos la fecha actual
+var fechaActual = new Date();
+
+//Modificamos sus atriburos de la fecha actual
+fechaActual.setFullYear(fechaActual.getFullYear()+10);//sumamos 10 años
+fechaActual.setMonth(fechaActual.getMonth()+4);//sumamos 4 meses
+fechaActual.setDate(fechaActual.getDate()+5);//sumamos 5 días
 
 //guardamos sus atributos
-var DiaSemana = diaSemana(fecha.getDay());
-var DiaMes = fecha.getDate();
-var MesDelAño = mesAño(fecha.getMonth());
-var Año = fecha.getFullYear();
-var horas = dobleDigito(fecha.getHours());
-var minutos = dobleDigito(fecha.getMinutes());
-var segundos = dobleDigito(fecha.getSeconds());
+var DiaSemana = diaSemana(fechaActual.getDay());
+var DiaMes = fechaActual.getDate();
+var MesDelAño = mesAño(fechaActual.getMonth());
+var Año = fechaActual.getFullYear();
+var horas = dobleDigito(fechaActual.getHours());
+var minutos = dobleDigito(fechaActual.getMinutes());
+var segundos = dobleDigito(fechaActual.getSeconds());
 
 function dobleDigito(n){
     return (n<10)?'0'+n:n;//si tiene menos de un digito le añade un 0 delante
