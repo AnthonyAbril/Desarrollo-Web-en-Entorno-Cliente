@@ -8,7 +8,7 @@ var cadena = prompt("Introduce un texto");
 
 function encriptado(cad){
     for (let ch of cad.split()){
-        ch += 5;
+        console.log(ch"="+ch);
     }
 
     return cad.join();
