@@ -1,0 +1,11 @@
+#zonadibujo {
+    display: grid;
+    grid-template-columns: repeat(30, 10px);
+    grid-template-rows: repeat(30, 10px);
+    gap: 1px;
+}
+.celda {
+    width: 10px;
+    height: 10px;
+    border: 1px solid white;
+}

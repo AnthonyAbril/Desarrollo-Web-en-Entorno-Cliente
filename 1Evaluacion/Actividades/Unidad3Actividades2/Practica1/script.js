@@ -49,7 +49,6 @@ function s(ventana){
     ventana.document.writeln("<h3>Ejemplo de Ventana Nueva</h3>");
     
     //o URL Completa: XXXXX  
-    var url="URL";
     ventana.document.writeln("<p>URL Completa: "+window.location.href+"</p>");
 
     //o Protocolo utilizado: XXXXX
@@ -73,21 +72,18 @@ function s(ventana){
     //• Que escriba en la ventana principal <h1>TAREA DWEC03</H2><HR />  
     window.document.write("<h1>TAREA DWEC03</H2><HR />");
     //• Que solicite: introduzca su nombre y apellidos.  
-    //var nombre = window.prompt("Introduzca su nombre y apellidos");
-    var nombre = "Anthony Abril";
+    var nombre = window.prompt("Introduzca su nombre y apellidos");
 
     //• Que solicite: introduzca DIA de nacimiento.  
-    //var diaNacimiento = window.prompt("Introduzca DIA de nacimiento");
-    var diaNacimiento = 19;
+    var diaNacimiento = parseInt(window.prompt("Introduzca DIA de nacimiento"));
 
     //• Que solicite: introduzca MES de nacimiento.  
-    //var mesNacimiento = window.prompt("Introduzca MES de nacimiento");
-    var mesNacimiento = 10;
+    var mesNacimiento = parseInt(window.prompt("Introduzca MES de nacimiento"));
 
     //• Que solicite: introduzca AÑO de nacimiento.  
-    //var añoNacimiento = window.prompt("Introduzca AÑO de nacimiento");
-    var añoNacimiento = 2004;
+    var anyoNacimiento = parseInt(window.prompt("Introduzca AÑO de nacimiento"));
 
+    var fechaNacimiento = new Date(anyoNacimiento, mesNacimiento, diaNacimiento);
 
     //• Una vez solicitados esos datos imprimirá en la ventana principal:  
     function imprimir(){
@@ -110,13 +106,35 @@ function s(ventana){
         //o Tu nombre todo en mayúsculas es: XXXXXXXX  
         window.document.writeln("<p>Tu nombre todo en mayúsculas es: "+ (nombre.toUpperCase()) +"</p>")
 
+        // Obtenemos la fecha actual
+        let fechaActual = new Date();
+        let diaActual = fechaActual.getDate();
+        let mesActual = fechaActual.getMonth() + 1; // Los meses en JavaScript empiezan en 0, por eso se suma 1
+        let anyoActual = fechaActual.getFullYear();
+
+        // Calculamos la edad
+        let edad = anyoActual - anyoNacimiento;
+
+        // Ajuste por si aún no ha cumplido años este año
+        if (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) {
+            edad--;
+        }
+
         //o Tu edad es: XX años.  
-        window.document.writeln("<p>Tu edad es: "+"</p>");
+        window.document.writeln("<p>Tu edad es: "+(edad)+"</p>");
 
         //o Naciste un feliz XXXXXX del año XXXX.  
+        window.document.writeln("<p>Naciste un feliz "+ diaNacimiento + " del " + mesNacimiento + " del año " + anyoNacimiento +"</p>")
+
         //o El coseno de 180 es: XXXXXXXXXX  
+        window.document.writeln("<p>El coseno de 180 es: "+ Math.cos(180 * (Math.PI / 180)) +"</p>")
+
         //o El número mayor de (34,67,23,75,35,19) es: XX  
+        let numeros = [34, 67, 23, 75, 35, 19];
+        window.document.writeln("<p>El coseno de 180 es: "+ Math.max(...numeros) +"</p>")
+
         //o Ejemplo de número al azar: XXXXXXXXXX  
+        window.document.writeln("<p>Ejemplo de número al azar: "+ Math.round(Math.random() * 100) +"</p>")
     }
 
     imprimir();
