@@ -131,7 +131,7 @@ function s(ventana){
 
         //o El número mayor de (34,67,23,75,35,19) es: XX  
         let numeros = [34, 67, 23, 75, 35, 19];
-        window.document.writeln("<p>El coseno de 180 es: "+ Math.max(...numeros) +"</p>")
+        window.document.writeln("<p>El número mayor de (34,67,23,75,35,19) es: "+ Math.max(...numeros) +"</p>")
 
         //o Ejemplo de número al azar: XXXXXXXXXX  
         window.document.writeln("<p>Ejemplo de número al azar: "+ Math.round(Math.random() * 100) +"</p>")
