@@ -25,7 +25,7 @@ function videoAleatorio() {
     const indiceAleatorio = Math.floor(Math.random() * videos.length);
     
     // Devolvemos la URL con autoplay activado
-    return videos[indiceAleatorio] + "?autoplay=1";
+    return videos[indiceAleatorio] + "&autoplay=1&muted=1";
 }
 
 // Seleccionamos el iframe del DOM
