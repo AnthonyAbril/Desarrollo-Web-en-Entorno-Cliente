@@ -27,7 +27,6 @@ function vehiculosAutorizados(autorizacion){
             return "Automóviles de más de 9 plazas, sin límite máximo";
         case "BTP":
             return "Vehículos especiales, taxis, prioritarios y transporte escolar.";
-    
         default:
             break;
     }
