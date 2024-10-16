@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos con Imágenes (JavaScript)</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            width: 50%;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+            /*transition: all 0.3s ease;*/
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-container">
+        <img src="https://via.placeholder.com/100" onmouseleave='mouseOut(this);' onmouseenter="mouseIn(this);" alt="Imagen 1">
+        <img src="https://via.placeholder.com/100" onmouseleave='mouseOut(this);' onmouseenter="mouseIn(this);" alt="Imagen 2">
+        <img src="https://via.placeholder.com/100" onmouseleave='mouseOut(this);' onmouseenter="mouseIn(this);" alt="Imagen 3">
+    </div>
+
+    <script>
+        function mouseIn(image){
+            image.style.width = '200px';
+            image.style.height = '200px';
+            image.style.border = '3px solid red';
+        }
+
+        // Evento cuando el ratón sale de la imagen (mouseleave)
+        function mouseOut(image){
+            image.style.width = '100px';
+            image.style.height = '100px';
+            image.style.border = 'none';
+        }
+    </script>
+
+</body>
+</html>
