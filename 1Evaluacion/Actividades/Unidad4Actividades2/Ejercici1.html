@@ -31,14 +31,21 @@
                 this.codPostal = codPostal;
             }
 
-            metodo1 (dato1, dato2,…){
-                
+            mostrarDatos(){
+                document.writeln("<h2>DATOS DE HOSPITAL</h2>");
+                document.writeln("<p>codigo: "+this.codhospital+"</p>");
+                document.writeln("<p>nombre: "+this.nombrehospital+"</p>");
+                document.writeln("<p>direccion: "+this.direccion+"</p>");
+                document.writeln("<p>telefono: "+this.telefono+"</p>");
+                document.writeln("<p>poblacion: "+this.poblacion+"</p>");
+                document.writeln("<p>codigo postal: "+this.codPostal+"</p>");
             }
         } 
 
         //b) Crear un objeto llamado Médico con las siguientes propiedades y métodos: 
-        class Médico {
-            constructor(codmedico, nombre, apellidos, dni, direccion, telefono, poblacion, codPostal, fechaNacimiento, especialidad, sueldo, Hospital){
+        class Medico {
+            // Constructor para inicializar las propiedades del médico
+            constructor(codmedico, nombre, apellidos, dni, direccion, telefono, poblacion, codPostal, fechaNacimiento, especialidad, sueldo, hospital) {
                 this.codmedico = codmedico;
                 this.nombre = nombre;
                 this.apellidos = apellidos;
@@ -50,17 +57,67 @@
                 this.fechaNacimiento = fechaNacimiento;
                 this.especialidad = especialidad;
                 this.sueldo = sueldo;
-                this.Hospital = Hospital;
+                this.hospital = hospital; // Se espera que sea una instancia del objeto Hospital
             }
 
             cambiaSueldo(nuevoSueldo){
                 this.sueldo = nuevoSueldo;
             }
 
+            //Permite calcular la retencion aplicada al sueldo del medico. Se le pasan los datos sueldo y porcentaje de retencion
             retencionMedico(sueldo, porcentajeRetencion){
+                // Convertimos el porcentaje a un valor decimal
+                let retencion = (sueldo * porcentajeRetencion) / 100;
 
+                return retencion;
             }
+
+            //Muestra los datos del medico y del hospital en el que trabaja
+            mostrarDatos(){
+                document.writeln("<h2>DATOS DE MEDICO</h2>");
+                document.writeln("<p>codigo: "+this.codmedico+"</p>");
+                document.writeln("<p>nombre: "+this.nombre+"</p>");
+                document.writeln("<p>apellidos: "+this.apellidos+"</p>");
+                document.writeln("<p>dni: "+this.dni+"</p>");
+                document.writeln("<p>direccion: "+this.direccion+"</p>");
+                document.writeln("<p>telefono: "+this.telefono+"</p>");
+                document.writeln("<p>poblacion: "+this.poblacion+"</p>");
+                document.writeln("<p>codigo postal: "+this.codPostal+"</p>");
+                document.writeln("<p>fecha de nacimiento: "+this.fechaNacimiento+"</p>");
+                document.writeln("<p>especialidad: "+this.especialidad+"</p>");
+                document.writeln("<p>sueldo: "+this.sueldo+"</p>");
+                document.writeln("<p>hospital: "+this.Hospital)+"</p>";
+            }
+
+            
         }
+        
+        //Crear una instancia del objeto Hospital llamado hospitalRibera. 
+        const hospitalRibera = new Hospital(1, "Hospital Ribera", "C/Padre Anton Martin 35", "123456789", "Valencia", "46011");
+
+        //Crear dos instancias del objeto llamado Medico llamados medicoDigestivo y medicoTraumatologo que pertenecen al hospitalRibera. 
+        const medicoDigestivo = new Medico(1,"Juan","Pérez García","12345678Z","Calle Mayor, 45","123456789","Madrid","28001","1980-05-15","Cardiología",5000,hospitalRibera);
+        const medicoTraumatologo = new Medico(2, "Jonathan", "Garcia Valero", "44026704T", "C/Francisco Cubells 14", "658660278", "Valencia", "46011", "25/5/2005", "Traumatologia", 2000, hospitalRibera);
+        //Cambia el sueldo del medicoTraumatologo por 2.300,00 € 
+        medicoTraumatologo.cambiaSueldo(2300);
+
+        //Mostrar los datos de la instancia hospitalRibera del objeto Hospital. 
+        hospitalRibera.mostrarDatos();
+
+        //Calcula la retención de las dos instancias del objeto Medico que hemos creado. 
+        retencionMedicoDigestivo = medicoDigestivo.retencionMedico(medicoDigestivo.sueldo,15);
+        retencionmedicoTraumatologo = medicoTraumatologo.retencionMedico(medicoTraumatologo,15);
+
+        //Mostrar  los  datos  de  las  dos  instancias  del  objeto  Medico  que  hemos  creado
+        medicoDigestivo.mostrarDatos();
+        medicoTraumatologo.mostrarDatos();
+
+        //así como las retenciones y los sueldos finales de cada una de las instancias del objeto.
+        document.writeln("<p>"+retencionMedicoDigestivo+"</p>");
+        document.writeln("<p>"+retencionmedicoTraumatologo+"</p>");
+
+        document.writeln("<p>"+medicoDigestivo.sueldo-retencionMedicoDigestivo+"</p>");
+        document.writeln("<p>"+medicoTraumatologo.sueldoretencionmedicoTraumatologo+"</p>");
 
     </script>
 </body>
