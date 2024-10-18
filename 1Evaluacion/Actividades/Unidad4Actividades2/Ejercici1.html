@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        a) Crear un objeto llamado Hospital con las siguientes propiedades y métodos: 
+        b) Crear un objeto llamado Médico con las siguientes propiedades y métodos: 
+        c) Crear una instancia del objeto Hospital llamado hospitalRibera. 
+        d) Crear dos instancias del objeto llamado Medico llamados medicoDigestivo y 
+        medicoTraumatologo que pertenecen al hospitalRibera. 
+        e) Cambia el sueldo del medicoTraumatologo por 2.300,00 € 
+        f) Mostrar los datos de la instancia hospitalRibera del objeto Hospital. 
+        g) Calcula la retención de las dos instancias del objeto Medico que hemos creado. 
+        h) Mostrar  los  datos  de  las  dos  instancias  del  objeto  Medico  que  hemos  creado,  así 
+        como las retenciones y los sueldos finales de cada una de las instancias del objeto.
+        */
+
+        //a) Crear un objeto llamado Hospital con las siguientes propiedades y métodos: 
+        class Hospital {
+            constructor(codhospital, nombrehospital, direccion, telefono, poblacion, codPostal){
+                this.codhospital = codhospital;
+                this.nombrehospital = nombrehospital;
+                this.direccion = direccion;
+                this.telefono = telefono;
+                this.poblacion = poblacion;
+                this.codPostal = codPostal;
+            }
+
+            metodo1 (dato1, dato2,…){
+                
+            }
+        } 
+
+        //b) Crear un objeto llamado Médico con las siguientes propiedades y métodos: 
+        class Médico {
+            constructor(codmedico, nombre, apellidos, dni, direccion, telefono, poblacion, codPostal, fechaNacimiento, especialidad, sueldo, Hospital){
+                this.codmedico = codmedico;
+                this.nombre = nombre;
+                this.apellidos = apellidos;
+                this.dni = dni;
+                this.direccion = direccion;
+                this.telefono = telefono;
+                this.poblacion = poblacion;
+                this.codPostal = codPostal;
+                this.fechaNacimiento = fechaNacimiento;
+                this.especialidad = especialidad;
+                this.sueldo = sueldo;
+                this.Hospital = Hospital;
+            }
+
+            cambiaSueldo(nuevoSueldo){
+                this.sueldo = nuevoSueldo;
+            }
+
+            retencionMedico(sueldo, porcentajeRetencion){
+
+            }
+        }
+
+    </script>
+</body>
+</html>
