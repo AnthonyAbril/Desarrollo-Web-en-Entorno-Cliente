@@ -86,10 +86,8 @@
                 document.writeln("<p>fecha de nacimiento: "+this.fechaNacimiento+"</p>");
                 document.writeln("<p>especialidad: "+this.especialidad+"</p>");
                 document.writeln("<p>sueldo: "+this.sueldo+"</p>");
-                document.writeln("<p>hospital: "+this.Hospital)+"</p>";
+                document.writeln("<p>hospital: "+this.hospital.nombrehospital)+"</p>";
             }
-
-            
         }
         
         //Crear una instancia del objeto Hospital llamado hospitalRibera. 
@@ -106,18 +104,18 @@
 
         //Calcula la retención de las dos instancias del objeto Medico que hemos creado. 
         retencionMedicoDigestivo = medicoDigestivo.retencionMedico(medicoDigestivo.sueldo,15);
-        retencionmedicoTraumatologo = medicoTraumatologo.retencionMedico(medicoTraumatologo,15);
+        retencionmedicoTraumatologo = medicoTraumatologo.retencionMedico(medicoTraumatologo.sueldo,15);
 
         //Mostrar  los  datos  de  las  dos  instancias  del  objeto  Medico  que  hemos  creado
         medicoDigestivo.mostrarDatos();
         medicoTraumatologo.mostrarDatos();
-
+        
         //así como las retenciones y los sueldos finales de cada una de las instancias del objeto.
-        document.writeln("<p>"+retencionMedicoDigestivo+"</p>");
-        document.writeln("<p>"+retencionmedicoTraumatologo+"</p>");
-
-        document.writeln("<p>"+medicoDigestivo.sueldo-retencionMedicoDigestivo+"</p>");
-        document.writeln("<p>"+medicoTraumatologo.sueldoretencionmedicoTraumatologo+"</p>");
+        document.writeln("<p>La retencion del medico "+medicoDigestivo.nombre+" es de "+retencionMedicoDigestivo+"</p>");
+        document.writeln("<p>La retencion del medico "+medicoTraumatologo.nombre+" es de "+retencionmedicoTraumatologo+"</p>");
+        
+        document.writeln("<p>El sueldo total del medico "+medicoDigestivo.nombre+" es de "+((medicoDigestivo.sueldo)-retencionMedicoDigestivo)+"</p>");
+        document.writeln("<p>El sueldo total del medico "+medicoTraumatologo.nombre+" es de "+((medicoTraumatologo.sueldo)-retencionmedicoTraumatologo)+"</p>");
 
     </script>
 </body>

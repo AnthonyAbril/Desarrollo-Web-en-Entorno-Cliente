@@ -21,7 +21,7 @@ const Proveedor = {
     }
 };
 
-const Producto = {
+const Producto = { 
     codProducto: "",
     categoria: "",
     peso: "",
