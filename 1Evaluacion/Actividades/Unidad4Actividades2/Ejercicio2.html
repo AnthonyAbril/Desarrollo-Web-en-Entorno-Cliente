@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        document.writeln("<p>FUNCIONAL</p>");
+
+        Realizar un script que permita: 
+            • Introducir por teclado números enteros, hasta leer el valor cero.  
+            • Escribir la longitud del array.  
+            • Escriba en el documento los elementos en orden inverso y eliminándoles.  
+            • Por último, escribir la longitud del array que deberá ser cero 
+        */
+
+        // Inicializar un array vacío para almacenar los números
+        let numeros = [];
+        let mensaje = "Introduce un número entero (0 para terminar):";
+        // Bucle para introducir números enteros hasta que se introduzca el cero
+        while (true) {
+            let input = prompt(mensaje);
+            try{
+
+                // Convertir la entrada a un número entero
+                let numero = (input);
+
+                if (isNaN(parseInt(numero))) {
+                    throw new Error("[DEBE SER UN NUMERO] Introduce un número entero (0 para terminar):"); // Lanza una excepción si no es un número
+                }
+
+                if(!Number.isInteger(parseFloat(numero))){
+                    throw new Error("[DEBE SER ENTERO] Introduce un número entero (0 para terminar):"); // Lanza una excepción si no es entero
+                }
+
+                // Comprobar si se ha introducido 0 para terminar
+                if (parseInt(numero) === 0) {
+                    break; // Salir del bucle si se introduce 0
+                }
+
+                // Añadir el número al array
+                numeros.push(numero);
+                mensaje = "Introduce un número entero (0 para terminar):";
+            }catch (error) {
+                // Mostrar el mensaje de error en el documento
+                mensaje = error.message;
+                
+            }
+        }
+
+        // Mostrar la longitud del array antes de eliminar los elementos
+        document.writeln("<p>Longitud del array: " + numeros.length + "</p>");
+
+        // Mostrar los elementos en orden inverso y eliminarlos del array
+        while (numeros.length > 0) {
+            // Extraer el último elemento del array
+            let numeroEliminado = numeros.pop();
+            
+            // Escribir el número en el documento
+            document.writeln("<p>" + numeroEliminado + "</p>");
+        }
+
+        // Al final, escribir la longitud del array que debe ser cero
+        document.writeln("<p>Longitud del array al final: " + numeros.length + "</p>");
+
+
+    </script>
+</body>
+</html>
