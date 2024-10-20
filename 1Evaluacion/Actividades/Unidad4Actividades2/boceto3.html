@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="citarse">Citarse</button>
+    <table border="1" id="tabla">
+        
+    </table>
+    <div id="botonporconsulta"></div>
+    <script>
+        /*
+        Implementar  una  página  que  facilite  las  citas  médicas,  basada  en  arrays  paralelos  vistos 
+        anteriormente y que aplique funciones para organizar las tareas a realizar. 
+
+        • Presentaremos una pantalla, con los siguientes elementos:  
+            o Citarse: Botón para que el paciente pulse y dé su nombre y número de consulta.   
+            o Siguiente a consulta N: Un botón por consulta, donde el doctor pulsa para siguiente paciente.  
+            o La lista de pacientes llamados a cada consulta se visualizará permanentemente en pantalla.  
+
+        • Crearemos una estructura de datos como el siguiente:  
+            o Consultas: array con el nombre de los doctores (se inicializará por código en el script)  
+            o Pacientes: array con el nombre de los pacientes (inicialmente vacío).  
+            o Citas: array bidimensional con una fila por consulta y una columna por 
+            paciente citado (se creará dinámicamente)  
+
+        • Diseñar una pantalla de gran tamaño, que resulte accesible y usable basada en CSS.
+        */
+
+        consultas = [
+            "Dr.A",
+            "Dr.B",
+            "Dr.C",
+            "Dr.D"
+        ];
+
+        for(let i = 0; i < consultas.length; i++){
+            document.getElementById("botonporconsulta").innerHTML += "<button>Siguiente a consulta "+consultas[i]+"</button>";
+        }
+
+        pacientes = [];
+
+        citas = [
+            ["A1","A2"],
+            ["B1","B2"],
+            ["C1","C2"],
+            ["D1","D2"]
+        ];
+        /*
+        citas = [];
+        for(let i = 0; i < consultas.length; i++){
+            citas[i] = [];
+        }
+        */
+        function listaDePacientes(){
+            console.log(citas);
+            let arrayMasLargo = citas[0];  // Comenzamos asumiendo que el primer array es el más largo
+
+            // Recorremos el array de arrays
+            for (let i = 1; i < citas.length; i++) {
+                if (consultas[i].length > arrayMasLargo.length) {
+                    arrayMasLargo = citas[i];  // Si encontramos un array más largo, lo actualizamos
+                }
+            }
+
+            lista = "<tr>";
+            //Consultas FUNCIONAL
+            for (let i = 0; i < citas.length; i++) {  
+                lista += "<th>"+consultas[i]+"</th>";
+            }
+            lista += "</tr>";
+
+            //Pacientes FILAS   (LONGITUD DE LISTA)
+            for (let fila = 0; fila < arrayMasLargo.length; fila++) {  
+
+                lista += "<tr>";
+                //Pacientes COLUMNAS    (ANCHO DE LISTA)
+                for (let columna = 0; columna < consultas.length; columna++) {
+                    if(citas[columna][fila]!==undefined){
+                        lista += "<td>"+citas[columna][fila]+"</td>";
+                    }else{
+                        lista += "<td> </td>";
+                    }
+                }
+                lista += "</tr>";
+            };
+
+            document.getElementById("tabla").innerHTML = lista;
+        }
+
+        listaDePacientes();
+
+        document.getElementById("citarse").addEventListener("click",function(){
+            nombre = prompt("Introduzca su nombre por favor");
+            nconsulta = prompt("Introduzca su numero de consulta por favor");
+
+            citas[nconsulta-1].push(nombre);
+            
+            listaDePacientes();
+
+        });
+        
+    </script>
+</body>
+</html>
