@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        Definir la estructura de un objeto que implemente el documento de factura. 
+        • Estará  formada  por  información  que  dispondremos  en  las  siguientes  propiedades del objeto:  
+            o Empresa (nombre de la empresa, dirección, teléfono, NIF), 
+            o Cliente (nombre del cliente, dirección, teléfono, NIF), 
+            o Detalle de factura como lista de elementos (descripción, precio, cantidad) 
+            o Totales  de  la  factura  (base  Imponible,  importe  total,  tipo  de  iva,  forma  de  pago). 
+        
+        • Una vez definidas las propiedades del objeto, añadir los siguientes métodos: 
+            o El constructor, que tendrá el siguiente prototipo de función:  
+            function Factura (empresa, cliente, detalle, tIva, formaPago) 
+            o calculaTotal calculará el importe total de la factura y actualizará las 
+            propiedades correspondientes. 
+            o muestraTotal  mostrará  el  importe  total  de  la  factura,  el  iva  aplicado  y  la  forma de pago. 
+            o imprimirFactura la imprimirá formateándola adecuadamente en el documento actual (document)
+        */
+        class Factura {
+            constructor(empresa, cliente, detalle, tIva, formaPago) {
+                this.empresa = empresa;
+                this.cliente = cliente;
+                this.detalle = detalle;  // Lista de objetos (descripción, precio, cantidad)
+                this.totales = {
+                    baseImponible: 0,    // Se calculará en calculaTotal
+                    importeTotal: 0,     // Se calculará en calculaTotal
+                    tipoIva: tIva,       // Tipo de IVA (por ejemplo: 21 para 21%)
+                    formaPago: formaPago // Forma de pago (por ejemplo: "Transferencia", "Tarjeta")
+                };
+            }
+
+            // Método para calcular el total de la factura
+            calculaTotal() {
+                // Calcular la base imponible (suma de precio * cantidad de cada elemento)
+                this.totales.baseImponible = this.detalle.reduce((acumulador, item) => {
+                    return acumulador + (item.precio * item.cantidad);
+                }, 0);
+
+                // Calcular el IVA
+                const iva = this.totales.baseImponible * (this.totales.tipoIva / 100);
+
+                // Calcular el importe total (base imponible + IVA)
+                this.totales.importeTotal = this.totales.baseImponible + iva;
+            }
+
+            // Método para mostrar el total de la factura
+            muestraTotal() {
+                console.log(`Base Imponible: ${this.totales.baseImponible.toFixed(2)}€`);
+                console.log(`IVA (${this.totales.tipoIva}%): ${(this.totales.baseImponible * (this.totales.tipoIva / 100)).toFixed(2)}€`);
+                console.log(`Importe Total: ${this.totales.importeTotal.toFixed(2)}€`);
+                console.log(`Forma de Pago: ${this.totales.formaPago}`);
+            }
+
+            // Método para imprimir la factura en el documento
+            imprimirFactura() {
+                const facturaHtml = `
+                    <h1>Factura</h1>
+                    <h2>Empresa</h2>
+                    <p>Nombre: ${this.empresa.nombre}</p>
+                    <p>Dirección: ${this.empresa.direccion}</p>
+                    <p>Teléfono: ${this.empresa.telefono}</p>
+                    <p>NIF: ${this.empresa.nif}</p>
+                    <h2>Cliente</h2>
+                    <p>Nombre: ${this.cliente.nombre}</p>
+                    <p>Dirección: ${this.cliente.direccion}</p>
+                    <p>Teléfono: ${this.cliente.telefono}</p>
+                    <p>NIF: ${this.cliente.nif}</p>
+                    <h2>Detalle de la Factura</h2>
+                    <ul>
+                        ${this.detalle.map(item => 
+                            `<li>${item.descripcion} - ${item.cantidad} x ${item.precio}€</li>`
+                        ).join('')}
+                    </ul>
+                    <h2>Totales</h2>
+                    <p>Base Imponible: ${this.totales.baseImponible.toFixed(2)}€</p>
+                    <p>IVA (${this.totales.tipoIva}%): ${(this.totales.baseImponible * (this.totales.tipoIva / 100)).toFixed(2)}€</p>
+                    <p>Importe Total: ${this.totales.importeTotal.toFixed(2)}€</p>
+                    <p>Forma de Pago: ${this.totales.formaPago}</p>
+                `;
+                document.body.innerHTML = facturaHtml;
+            }
+        }
+
+        // Ejemplo de uso:
+
+        const empresa = {
+            nombre: "Nintendo S.A.",
+            direccion: "Calle Bacalao, 123",
+            telefono: "999999999",
+            nif: "A12345678"
+        };
+
+        const cliente = {
+            nombre: "Anthony Abril",
+            direccion: "Calle Principal, 40",
+            telefono: "123456789",
+            nif: "44530784T"
+        };
+
+        const detalleFactura = [
+            { descripcion: "Producto A", precio: 100, cantidad: 2 },
+            { descripcion: "Producto B", precio: 50, cantidad: 1 },
+            { descripcion: "Producto C", precio: 20, cantidad: 5 }
+        ];
+
+        // Crear la factura
+        const miFactura = new Factura(empresa, cliente, detalleFactura, 21, "Transferencia");
+
+        // Calcular el total
+        miFactura.calculaTotal();
+
+        // Mostrar el total en la consola
+        miFactura.muestraTotal();
+
+        // Imprimir la factura en el documento HTML
+        miFactura.imprimirFactura();
+
+    </script>
+</body>
+</html>

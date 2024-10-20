@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Citas Médicas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .consulta {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        #resultado {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        button{
+            background-color: cyan;
+            border-radius: 25px;
+            border: none;
+            padding: 5px 10px;
+        }
+        #citarse{
+            background-color: red;
+            display: block;   /* Hace que el botón sea un bloque */
+            margin: 0 auto;   /* Centra el botón horizontalmente */
+        }
+        #consultas {
+            display: flex;           /* Convierte el contenedor en un elemento flexible */
+            justify-content: center; /* Centra los botones horizontalmente */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Facilitador de Citas Médicas</h1>
+
+    <button id="citarse">Citarse</button>
+
+    <div id="consultas"></div>
+    <div id="resultado"></div>
+
+    <script>
+        /*
+        Implementar  una  página  que  facilite  las  citas  médicas,  basada  en  arrays  paralelos  vistos 
+        anteriormente y que aplique funciones para organizar las tareas a realizar. 
+
+        • Presentaremos una pantalla, con los siguientes elementos:  
+            o Citarse: Botón para que el paciente pulse y dé su nombre y número de consulta.   
+            o Siguiente a consulta N: Un botón por consulta, donde el doctor pulsa para siguiente paciente.  
+            o La lista de pacientes llamados a cada consulta se visualizará permanentemente en pantalla.  
+
+        • Crearemos una estructura de datos como el siguiente:  
+            o Consultas: array con el nombre de los doctores (se inicializará por código en el script)  
+            o Pacientes: array con el nombre de los pacientes (inicialmente vacío).  
+            o Citas: array bidimensional con una fila por consulta y una columna por 
+            paciente citado (se creará dinámicamente)  
+
+        • Diseñar una pantalla de gran tamaño, que resulte accesible y usable basada en CSS.
+        */
+
+        // Inicializar las estructuras de datos
+        let consultas = ["Dr. Pérez", "Dr. Gómez", "Dr. López"];
+        let pacientes = [];
+        let citas = [];
+
+        for(let i = 0; i < consultas.length; i++){ // Array bidimensional para citas
+            citas[i] = [];
+        }
+
+        // Mostrar botones de consulta
+        function mostrarBotonesConsultas() {
+            const consultasDiv = document.getElementById("consultas");
+            consultasDiv.innerHTML = ""; // Limpiar consultas anteriores
+
+            consultas.forEach((doctor, index) => {
+                const button = document.createElement("button");
+                button.textContent = `Siguiente a consulta de ${doctor}`;
+                button.onclick = () => siguientePaciente(index);
+                consultasDiv.appendChild(button);
+            });
+        }
+
+        // Función para citarse
+        document.getElementById("citarse").addEventListener("click", function() {
+            let nombre = prompt("Introduce tu nombre:");
+            let numeroConsulta = prompt("Introduce el número de consulta (1, 2, 3):");
+            let consultaIndex = parseInt(numeroConsulta) - 1;
+
+            if (nombre && !isNaN(consultaIndex) && consultaIndex >= 0 && consultaIndex < consultas.length) {
+                pacientes.push(nombre); // Agregar paciente a la lista
+                citas[consultaIndex].push(nombre); // Agregar paciente a la consulta correspondiente
+                mostrarResultados();
+                mostrarBotonesConsultas();
+            } else {
+                alert("Por favor, introduce un nombre válido y un número de consulta entre 1 y " + consultas.length + ".");
+            }
+        });
+
+        // Función para avanzar al siguiente paciente en la consulta
+        function siguientePaciente(consultaIndex) {
+            if (citas[consultaIndex].length === 0) {
+                alert(`No hay pacientes en la consulta de ${consultas[consultaIndex]}.`);
+            } else {
+                const pacienteLlamado = citas[consultaIndex].shift(); // Llamar al siguiente paciente
+                mostrarResultados();
+                alert(`Llamando a ${pacienteLlamado} para la consulta de ${consultas[consultaIndex]}.`);
+            }
+        }
+
+        // Función para mostrar los resultads
+        function mostrarResultados() {
+            const resultadoDiv = document.getElementById("resultado");
+            resultadoDiv.innerHTML = "<h2>Lista de Pacientes por Consulta</h2>";
+
+            consultas.forEach((doctor, index) => {
+                resultadoDiv.innerHTML += `<h3>${doctor}</h3>`;
+                if (citas[index].length > 0) {
+                    resultadoDiv.innerHTML += `<p>Pacientes: ${citas[index].join(", ")}</p>`;
+                } else {
+                    resultadoDiv.innerHTML += "<p>No hay pacientes en espera.</p>";
+                }
+            });
+        }
+
+        // Mostrar los botones al cargar la página
+        mostrarBotonesConsultas();
+        mostrarResultados();
+    </script>
+
+</body>
+</html>
