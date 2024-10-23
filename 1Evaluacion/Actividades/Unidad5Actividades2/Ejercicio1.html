@@ -44,61 +44,116 @@
     -->
 
     <form>
-        <!--Tipo de Inmueble. Desplegable con los valores: piso, adosado, parcela, casa, chalet, local, nave.  -->
-        <select name="TipoInmueble">
-            <option>piso</option>
-            <option>adosado</option>
-            <option>parcela</option>
-            <option>casa</option>
-            <option>chalet</option>
-            <option>local</option>
-            <option>nave</option>
-        </select>
-
-        <!--Provincia: Caja de texto con las sugerencias Madrid, Valencia, Barcelona, Murcia.  -->
-        <input name="Provincia" type="text" list="Provincias">
-        <datalist id="Provincias">
-            <option value="Madrid"></option>
-            <option value="Valencia"></option>
-            <option value="Barcelona"></option>
-            <option value="Murcia"></option>
-        </datalist>
-
-        <!--Ubicación: Desplegable de 4 filas de alto y selección múltiple con los valores: centro, sur, este, oeste, ronda, periferia.  -->
-        <select multiple name="Ubicación" size="4" >
-            <option>centro</option>
-            <option>sur</option>
-            <option>este</option>
-            <option>oeste</option>
-            <option>ronda</option>
-            <option>periferia</option>
-        </select>
+        
 
         <fieldset>
             <legend>Formulario</legend>
+            <div>
+                <label for="TipoInmueble">Tipo de Inmueble</label>
+                <!--Tipo de Inmueble. Desplegable con los valores: piso, adosado, parcela, casa, chalet, local, nave.  -->
+                <select name="TipoInmueble">
+                    <option>piso</option>
+                    <option>adosado</option>
+                    <option>parcela</option>
+                    <option>casa</option>
+                    <option>chalet</option>
+                    <option>local</option>
+                    <option>nave</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="Provincia">Provincia</label>
+                <!--Provincia: Caja de texto con las sugerencias Madrid, Valencia, Barcelona, Murcia.  -->
+                <input name="Provincia" type="text" list="Provincias">
+                <datalist id="Provincias">
+                    <option value="Madrid"></option>
+                    <option value="Valencia"></option>
+                    <option value="Barcelona"></option>
+                    <option value="Murcia"></option>
+                </datalist>
+            </div>
+
+            <div>
+                <label for="Ubicación">Ubicación</label>
+                <!--Ubicación: Desplegable de 4 filas de alto y selección múltiple con los valores: centro, sur, este, oeste, ronda, periferia.  -->
+                <select multiple name="Ubicación" size="4" >
+                    <option>centro</option>
+                    <option>sur</option>
+                    <option>este</option>
+                    <option>oeste</option>
+                    <option>ronda</option>
+                    <option>periferia</option>
+                </select>
+            </div>
+
             <div>
                 <label for="PrecioMaximo">Precio maximo</label>
                 <!--Precio Máximo: Número entre 0 y 500.000€ con saltos de 10.000 €  -->
                 <input name="PrecioMaximo" type="number" min="0" max="500000" step="10000">
             </div>
+
+            <div>
+                <label for="MetrosMinimos">Metros minimos</label>
+                <!--Metros Mínimos: Número entre 0 y 5.000 metros con saltos de 50 metros.  -->
+                <input name="MetrosMinimos" type="number" min="0" max="5000" step="50">
+            </div>
+
+            <div>
+                <label for="AlturaMinima">Altura minima</label>
+                <!--Altura Mínima: Número de 0 a 40.  -->
+                <input name="AlturaMinima" type="number" min="0" max="40">
+            </div>
+
+            <div>
+                <label for="MinimoHabitaciones">Minimo de habitaciones</label>
+                <!--Mínimo de Habitaciones: Número de 1 a 10.  -->
+                <input name="MinimoHabitaciones" type="number" min="1" max="10">
+            </div>
+
+            <div>
+                <label for="MinimoBaños">Mínimo Baños</label>
+                <!--Mínimo Baños: Número de 1 a 5.  -->
+                <input name="MinimoBaños" type="number" min="1" max="5">
+            </div>
+
+            <div>
+                <label for="Caracteristicas">Características</label>
+                <!--Características. Casillas de verificación para: Calefacción, Aire Acondicionado, Garaje, Trastero, Piscina, Ascensor, Exterior, Terraza, Amueblado   -->
+                <input type="checkbox" name="caracteristicas" value="calefaccion">Calefacción
+                <input type="checkbox" name="caracteristicas" value="aireacondicionado">Aire Acondicionado
+                <input type="checkbox" name="caracteristicas" value="garaje">Garaje
+                <input type="checkbox" name="caracteristicas" value="trastero">Trastero
+                <input type="checkbox" name="caracteristicas" value="piscina">Piscina
+                <input type="checkbox" name="caracteristicas" value="ascensor">Ascensor
+                <input type="checkbox" name="caracteristicas" value="exterior">Exterior
+                <input type="checkbox" name="caracteristicas" value="terraza">Terraza
+                <input type="checkbox" name="caracteristicas" value="amueblado">Amueblado
+            </div>
+
+            <div>
+                <label for="ProximidadPlaya">Proximidad a la playa</label>
+                <!--Proximidad a la playa. Deslizante de min a max.   -->
+                <input name="ProximidadPlaya" type="range">
+            </div>
+
+            <div>
+                <fieldset>
+                    <legend>Formulario</legend>
+                    <!--Estado. Botones de radio remarcados en un cuadro con el texto Estado y los valores 
+                    excluyentes: Indiferente (marcado por defecto), Nuevo, Buen estado y Para reformar.  
+                    -->
+                    <label for="estado">Indiferente</label>
+                    <input name="estado" type="radio" checked>
+                    <label for="estado">Nuevo</label>
+                    <input name="estado" type="radio">
+                    <label for="estado">Buen estado</label>
+                    <input name="estado" type="radio">
+                    <label for="estado">Para reformar</label>
+                    <input name="estado" type="radio">
+                </fieldset>
+            </div>
         </fieldset>
-        
-
-        <!--Metros Mínimos: Número entre 0 y 5.000 metros con saltos de 50 metros.  -->
-        <input name="MetrosMinimos" type="number" min="0" max="5000" step="50">
-
-        <!--Altura Mínima: Número de 0 a 40.  -->
-        <input name="AlturaMinima" type="number" min="0" max="40">
-
-        <!--Mínimo de Habitaciones: Número de 1 a 10.  -->
-        <input name="MinimoHabitaciones" type="number" min="1" max="10">
-
-        <!--Mínimo Baños: Número de 1 a 5.  -->
-        <input name="MinimoBaños" type="number" min="1" max="5">
-
-        <!--Características. Casillas de verificación para: Calefacción, Aire Acondicionado, Garaje, Trastero, Piscina, Ascensor, Exterior, Terraza, Amueblado   -->
-        <input name="Calefacción" type="checkbox">
-
 
     </form>
 </body>
