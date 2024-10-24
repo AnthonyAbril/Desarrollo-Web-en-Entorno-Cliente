@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script>
+        // Función para obtener la fecha actual en formato dd/mm/aaaa
+        function setFechaActual() {
+            const hoy = new Date();
+            const dia = String(hoy.getDate()).padStart(2, '0');
+            const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Los meses comienzan en 0
+            const anio = hoy.getFullYear();
+            const fechaActual = `${dia}/${mes}/${anio}`;
+            
+            // Asignar la fecha al campo oculto
+            document.getElementByName('FechaActual').value = fechaActual;
+        }
+
+        // Ejecutar la función cuando el DOM esté completamente cargado
+        window.onload = setFechaActual;
+    </script>
 </head>
 <body>
     <!--
@@ -41,6 +57,16 @@
         • Campo oculto con la fecha actual en formato dd/mm/aaaa  
         • Botón de Enviar con una imagen.  
         • Botón de Restablecer formulario. 
+    -->
+
+    <!--
+        input:valid:focus{
+            background-color: white;
+        }
+
+        input:invalid:focus{
+            background-color: red;
+        }
     -->
 
     <form>
@@ -139,7 +165,7 @@
 
             <div>
                 <fieldset>
-                    <legend>Formulario</legend>
+                    <legend>Estado</legend>
                     <!--Estado. Botones de radio remarcados en un cuadro con el texto Estado y los valores 
                     excluyentes: Indiferente (marcado por defecto), Nuevo, Buen estado y Para reformar.  
                     -->
@@ -155,6 +181,57 @@
             </div>
         </fieldset>
 
+        <div>
+            <label for="Nombre">Nombre</label>
+            <!-- Nombre: Caja de texto máximo caracteres 35.  -->
+            <input name="Nombre" type="text" maxlength="35">
+        </div>
+
+        <div>
+            <label for="Apellidos">Apellidos</label>
+            <!-- Apellidos: Caja de texto máximo caracteres 75.  -->
+            <input name="Apellidos" type="text" maxlength="75">
+        </div>
+
+        <div>
+            <label for="CorreoElectrónico">Correo Electrónico</label>
+            <!-- Correo Electrónico: Caja de texto tipo correo.  -->
+            <input name="CorreoElectrónico" type="email">
+        </div>
+
+        <div>
+            <label for="FechaNacimiento">Fecha Nacimiento</label>
+            <!-- Fecha Nacimiento: Caja de texto tipo fecha.  -->
+            <input name="FechaNacimiento" type="date">
+        </div>
+
+        <div>
+            <label for="DNI">DNI</label>
+            <!-- DNI. Caja de texto de tipo contraseña.  -->
+            <input name="DNI" type="password">
+        </div>
+
+        <div>
+            <label for="Comentario">Comentario</label>
+            <!-- Comentario. Área de texto de 6 filas y 60 columnas.  -->
+            <textarea name="Comentario" type="text" cols="60" rows="6"></textarea>
+        </div>
+
+        <div>
+            <!-- Campo oculto con la fecha actual en formato dd/mm/aaaa  -->
+            <input type="hidden" name="FechaActual">
+        </div>
+
+        <div>
+            <!-- Botón de Enviar con una imagen.  -->
+            <!--<input type="submit" value="Enviar">-->
+            <input type="image" src="enviar.png" alt="Enviar" width="10%" />
+        </div>
+
+        <div>
+            <!-- Botón de Restablecer formulario. -->
+            <input name="Restablecer" type="reset" />
+        </div>
     </form>
 </body>
 </html>
