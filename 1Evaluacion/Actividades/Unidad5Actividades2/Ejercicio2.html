@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            color: black;
+        }
+        .errorMensaje{
+            color: red;
+        }
+        input:focus {/* Aplica el color de fondo amarillo cuando el input está en foco */
+            background-color: rgb(255, 217, 0);
+        }
+    </style>
+</head>
+<body>
+
+</head>
+<body>
+    <!--
+    Crear un formulario que permita dar de alta un socio de un videoclub en una base de 
+    datos, validando los datos antes de enviarlos al servidor.  
+    
+    Los datos del formulario que se deben validar son:  
+        • Nombre: Entre 3 y 30 caracteres.  
+        • Apellidos: Entre 3 y 60 caracteres.  
+        • Dirección: Entre 3 y 50 caracteres.  
+        • Población: Entre 3 y 30 caracteres.  
+        • Código Postal: 5 digitos.  
+        • Teléfono: Por Ejemplo (963) 498-473  
+        • Móvil: Por ejemplo 687-458-785 y debe empezar por 6.  
+        • DNI: Por ejemplo 24.547.785-T  
+        • Num. Cuenta Corriente: Por ejemplo 0098-5098-76-9876754568  
+        • Cuota Mensual: Número decimal positivo.  
+        • Fecha Nacimiento: Por ejemplo 12/11/1978  
+        • Num. Hijos: Número entero positivo.  
+        • Dirección de correo Electrónico: Por ejemplo luis@ono.com
+    -->
+
+    <form id="altaSocioForm" onsubmit="return validarFormulario()">
+        <label for="nombre">Nombre (3-30 caracteres):</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <p class="errorMensaje" name="nombreError"></p><br><br>
+    
+        <label for="apellidos">Apellidos (3-60 caracteres):</label>
+        <input type="text" id="apellidos" name="apellidos" required>
+        <p class="errorMensaje" name="apellidosError"></p><br><br>
+    
+        <label for="direccion">Dirección (3-50 caracteres):</label>
+        <input type="text" id="direccion" name="direccion" required>
+        <p class="errorMensaje" name="direccionError"></p><br><br>
+    
+        <label for="poblacion">Población (3-30 caracteres):</label>
+        <input type="text" id="poblacion" name="poblacion" required>
+        <p class="errorMensaje" name="poblacionError"></p><br><br>
+    
+        <label for="codigoPostal">Código Postal (5 dígitos):</label>
+        <input type="text" id="codigoPostal" name="codigoPostal" required>
+        <p class="errorMensaje" name="codigoPostalError"></p><br><br>
+    
+        <label for="telefono">Teléfono ((963) 498-473):</label>
+        <input type="text" id="telefono" name="telefono" required>
+        <p class="errorMensaje" name="telefonoError"></p><br><br>
+    
+        <label for="movil">Móvil (687-458-785):</label>
+        <input type="text" id="movil" name="movil" required>
+        <p class="errorMensaje" name="movilError"></p><br><br>
+    
+        <label for="dni">DNI (24.547.785-T):</label>
+        <input type="text" id="dni" name="dni" required>
+        <p class="errorMensaje" name="dniError"></p><br><br>
+    
+        <label for="numCuenta">Num. Cuenta Corriente (0098-5098-76-9876754568):</label>
+        <input type="text" id="numCuenta" name="numCuenta" required>
+        <p class="errorMensaje" name="numCuentaError"></p><br><br>
+    
+        <label for="cuotaMensual">Cuota Mensual:</label>
+        <input type="number" id="cuotaMensual" name="cuotaMensual" min="0" step="0.01" required>
+        <p class="errorMensaje" name="cuotaMensualError"></p><br><br>
+    
+        <label for="fechaNacimiento">Fecha Nacimiento (dd/mm/yyyy):</label>
+        <input type="text" id="fechaNacimiento" name="fechaNacimiento" required>
+        <p class="errorMensaje" name="fechaNacimientoError"></p><br><br>
+    
+        <label for="numHijos">Num. Hijos (Número entero positivo):</label>
+        <input type="number" id="numHijos" name="numHijos" min="0" required>
+        <p class="errorMensaje" name="numHijosError"></p><br><br>
+    
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" required>
+        <p class="errorMensaje" name="emailError"></p><br><br>
+    
+        <button type="submit">Registrar</button>
+    </form>
+    
+    <script>
+        function validarFormulario() {
+            // Validar Nombre
+            const nombre = document.getElementById("nombre").value;
+            if (nombre.length < 3 || nombre.length > 30) {
+                document.getElementByName("nombreError").value="El nombre debe tener entre 3 y 30 caracteres.";
+
+                return false;
+            }
+        
+            // Validar Apellidos
+            const apellidos = document.getElementById("apellidos").value;
+            if (apellidos.length < 3 || apellidos.length > 60) {
+                alert("Los apellidos deben tener entre 3 y 60 caracteres.");
+                document.getElementById("apellidos").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Dirección
+            const direccion = document.getElementById("direccion").value;
+            if (direccion.length < 3 || direccion.length > 50) {
+                alert("La dirección debe tener entre 3 y 50 caracteres.");
+                document.getElementById("direccion").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Población
+            const poblacion = document.getElementById("poblacion").value;
+            if (poblacion.length < 3 || poblacion.length > 30) {
+                alert("La población debe tener entre 3 y 30 caracteres.");
+                document.getElementById("poblacion").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Código Postal
+            const codigoPostal = document.getElementById("codigoPostal").value;
+            if (!/^\d{5}$/.test(codigoPostal)) {
+                alert("El código postal debe tener 5 dígitos.");
+                document.getElementById("codigoPostal").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Teléfono
+            const telefono = document.getElementById("telefono").value;
+            if (!/^\(\d{3}\) \d{3}-\d{3}$/.test(telefono)) {
+                alert("El teléfono debe tener el formato (963) 498-473.");
+                document.getElementById("telefono").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Móvil
+            const movil = document.getElementById("movil").value;
+            if (!/^6\d{2}-\d{3}-\d{3}$/.test(movil)) {
+                alert("El móvil debe tener el formato 687-458-785 y empezar por 6.");
+                document.getElementById("movil").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar DNI
+            const dni = document.getElementById("dni").value;
+            if (!/^\d{2}\.\d{3}\.\d{3}-[A-Z]$/.test(dni)) {
+                alert("El DNI debe tener el formato 24.547.785-T.");
+                document.getElementById("dni").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Número de Cuenta Corriente
+            const numCuenta = document.getElementById("numCuenta").value;
+            if (!/^\d{4}-\d{4}-\d{2}-\d{10}$/.test(numCuenta)) {
+                alert("El número de cuenta corriente debe tener el formato 0098-5098-76-9876754568.");
+                document.getElementById("numCuenta").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Fecha de Nacimiento
+            const fechaNacimiento = document.getElementById("fechaNacimiento").value;
+            if (!/^\d{2}\/\d{2}\/\d{4}$/.test(fechaNacimiento)) {
+                alert("La fecha de nacimiento debe tener el formato dd/mm/yyyy.");
+                document.getElementById("fechaNacimiento").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Cuota Mensual
+            const cuotaMensual = document.getElementById("cuotaMensual").value;
+            if (cuotaMensual <= 0) {
+                alert("La cuota mensual debe ser un número positivo.");
+                document.getElementById("cuotaMensual").style["background-color"]="red";
+                return false;
+            }
+        
+            // Validar Número de Hijos
+            const numHijos = document.getElementById("numHijos").value;
+            if (!Number.isInteger(Number(numHijos)) || numHijos < 0) {
+                alert("El número de hijos debe ser un número entero positivo.");
+                document.getElementById("numHijos").style["background-color"]="red";
+                return false;
+            }
+        
+            // Si todas las validaciones se pasan, se envía el formulario
+            return true;
+        }
+    </script>
+
+</body>
+</html>

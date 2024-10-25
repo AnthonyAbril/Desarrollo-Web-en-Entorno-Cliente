@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos de Ratón y Teclado</title>
+    <style>
+        /* Estilos del cuadro de mensaje */
+        #mensaje {
+            width: 300px;
+            height: 100px;
+            border: 1px solid #000;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Interacción con Eventos del Ratón y Teclado</h2>
+<div id="mensaje">Mueve el ratón o presiona una tecla para ver los detalles del evento aquí.</div>
+
+<script>
+    // Seleccionar el cuadro de mensaje
+    const mensajeDiv = document.getElementById("mensaje");
+
+    // Evento: Movimiento del Ratón
+    window.addEventListener("mousemove", (event) => {
+        const xNavegador = event.clientX; // Coordenada X en la ventana del navegador
+        const yNavegador = event.clientY; // Coordenada Y en la ventana del navegador
+        const xPagina = event.pageX;      // Coordenada X en la página
+        const yPagina = event.pageY;      // Coordenada Y en la página
+        
+        // Actualizar el mensaje en el div y el color de fondo
+        mensajeDiv.textContent = `Movimiento del ratón:
+                                  Ventana: (${xNavegador}, ${yNavegador})
+                                  Página: (${xPagina}, ${yPagina})`;
+        mensajeDiv.style.backgroundColor = "white"; // Fondo blanco al mover el ratón
+    });
+
+    // Evento: Pulsación de una tecla
+    window.addEventListener("keydown", (event) => {
+        const tecla = event.key;          // Tecla pulsada
+        const codigoTecla = event.keyCode; // Código de la tecla
+        
+        // Actualizar el mensaje en el div y cambiar el color de fondo
+        mensajeDiv.textContent = `Tecla pulsada:
+                                  Tecla: ${tecla} 
+                                  Código: ${codigoTecla}`;
+        mensajeDiv.style.backgroundColor = "#CCE6FF"; // Fondo azul al pulsar una tecla
+    });
+
+    // Evento: Clic con el Ratón
+    window.addEventListener("mousedown", (event) => {
+        const boton = event.button; // Botón del ratón pulsado (0 = izquierdo, 1 = medio, 2 = derecho)
+        
+        // Actualizar el mensaje en el div y cambiar el color de fondo
+        mensajeDiv.textContent = `Clic del ratón:
+                                  Botón: ${boton === 0 ? 'Izquierdo' : boton === 1 ? 'Medio' : 'Derecho'}`;
+        mensajeDiv.style.backgroundColor = "#FFFFCC"; // Fondo amarillo al hacer clic
+    });
+</script>
+
+</body>
+</html>

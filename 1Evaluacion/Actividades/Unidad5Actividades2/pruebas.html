@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="altaSocioForm" onsubmit="return validarFormulario()">
+        <label for="nombre">Nombre (3-30 caracteres):</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <a class="errorMensaje" id="nombreError">El nombre debe tener entre 3 y 30 caracteres.</a><br><br>
+    
+        <label for="apellidos">Apellidos (3-60 caracteres):</label>
+        <input type="text" id="apellidos" name="apellidos" required>
+        <a class="errorMensaje" id="apellidosError">Los apellidos deben tener entre 3 y 60 caracteres.</a><br><br>
+    
+        <button type="submit">Registrar</button>
+    </form>
+    <script>
+        document.getElementsByClassName("errorMensaje").forEach(element => {
+            element.style["color"]="hidden";
+            element.style["background-color"]="none";
+        });
+
+        function validarInput(restriccion,error){
+            if(restriccion!=false){
+                document.getElementById(error).style["color"]="white";
+                document.getElementById(error).style["background-color"]="red";
+            }else{
+                document.getElementById(error).style["visibility"]="hidden";
+                document.getElementById(error).style["background-color"]="none";
+            }
+            return restriccion;
+        }
+
+        function validarFormulario() {
+            // Validar Nombre
+            const nombre = document.getElementById("nombre").value;
+            if (validarInput((nombre.length < 3 || nombre.length > 30),"nombreError")){
+                return false;
+            }
+
+            // Validar Apellidos
+            const apellidos = document.getElementById("apellidos").value;
+            if (validarInput((apellidos.length < 3 || apellidos.length > 60),"apellidosError")){
+                return false;
+            }
+            
+            // Si todas las validaciones se pasan, se envía el formulario
+            return true;
+        }
+    </script>
+</body>
+</html>

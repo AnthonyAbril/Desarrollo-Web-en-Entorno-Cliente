@@ -11,10 +11,10 @@
             const dia = String(hoy.getDate()).padStart(2, '0');
             const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Los meses comienzan en 0
             const anio = hoy.getFullYear();
-            const fechaActual = `${dia}/${mes}/${anio}`;
+            const fechaActual = dia+"/"+mes+"/"+anio;
             
             // Asignar la fecha al campo oculto
-            document.getElementByName('FechaActual').value = fechaActual;
+            document.getElementById('FechaActual').value = fechaActual;
         }
 
         // Ejecutar la función cuando el DOM esté completamente cargado
@@ -219,7 +219,7 @@
 
         <div>
             <!-- Campo oculto con la fecha actual en formato dd/mm/aaaa  -->
-            <input type="hidden" name="FechaActual">
+            <input type="hidden" name="FechaActual" id="FechaActual">
         </div>
 
         <div>
