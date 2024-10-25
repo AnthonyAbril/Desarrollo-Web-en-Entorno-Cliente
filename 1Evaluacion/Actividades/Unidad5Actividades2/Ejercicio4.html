@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!--
+        Desarrollar  un  script  genérico  de  validación  de  campos  requeridos  en  formularios,  que 
+        permita  de  forma  gráfica  informar  al  usuario  de  la  página  de  cuáles  son  los  campos 
+        requeridos  (en  la  imagen  con  fondo  amarillo)  y permita  validarles  en  función  de  aquellos 
+        que tienen aplicada la clase “requerido”. Si ocurrieran errores de validación, informaremos 
+        al usuario reforzando el esquema de color de dichos campos (naranja en la imagen)
+
+        amarillo: campos requeridos
+        naranja: error de validacion
+    -->
+    <h1>Alta de Personas</h1>
+    <p>Rellene los siguientes datos y envielos para insertar nueva persona</p>
+    <form>
+        <div>
+            <label>DNI</label>
+            <input class="formulario" type="text" id="DNI" required>
+        </div>
+
+        <div>
+            <label>Nombre</label>
+            <input class="formulario" type="text" id="Nombre">
+        </div>
+
+        <div>
+            <label>Foto</label>
+            <input class="formulario" type="text" id="Foto">
+        </div>
+
+        <div>
+            <label>Edad</label>
+            <input class="formulario" type="text" id="Edad">
+        </div>
+
+        <div>
+            <label>Poblacion</label>
+            <select class="formulario" name="Poblacion" id="Poblacion" required>
+                <option>Madrid</option>
+                <option>Valencia</option>
+                <option>Castellon</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Observacion</label>
+            <textarea class="formulario" type="text" id="Observacion"></textarea>
+        </div>
+
+        <input type="submit">
+    </form>
+    <script>
+
+
+        
+        const elementos_formulario = document.getElementsByClassName("formulario");//guarda los elementos de clase formulario
+        for (let element of elementos_formulario) {//recorre los elementos de clase formulario
+            if (element.hasAttribute('required')) {//comprueba que es requerido
+                element.style["background-color"] = "yellow";//le añade un fondo amarillo
+            }
+        }
+
+        function validarInput(restriccion){
+            if(restriccion!=false){
+                document.getElementById(error).style["color"]="white";
+                document.getElementById(error).style["background-color"]="red";
+            }else{
+                document.getElementById(error).style["visibility"]="hidden";
+                document.getElementById(error).style["background-color"]="none";
+            }
+            return restriccion;
+        }
+
+        function validarFormulario() {
+            // Validar DNI
+            const dni = document.getElementById("DNI").value;
+            if (validarInput((!/^\d{2}\.\d{3}\.\d{3}-[A-Z]$/.test(dni)))){
+                return false;
+            }
+
+            // Validar Nombre
+            const nombre = document.getElementById("Nombre").value;
+            if (validarInput((nombre.length < 3 || nombre.length > 30),"nombreError")){
+                return false;
+            }
+
+            // Validar Apellidos
+            const edad = document.getElementById("Edad").value;
+            if (validarInput(edad>0 && (Number.isInteger(Number (edad))))){
+                return false;
+            }
+            
+            // Si todas las validaciones se pasan, se envía el formulario
+            return true;
+        }
+    </script>
+</body>
+</html>
