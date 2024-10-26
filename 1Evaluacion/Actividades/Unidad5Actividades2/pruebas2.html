@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="altaSocioForm" onsubmit="return validarFormulario();">
+        <label for="nombre">Nombre (3-30 caracteres):</label>
+        <input class="formulario" type="text" id="nombre" name="nombre" required><br><br>
+    
+        <label for="apellidos">Apellidos (3-60 caracteres):</label>
+        <input class="formulario" type="text" id="apellidos" name="apellidos" required><br><br>
+    
+        <button type="submit">Registrar</button>
+    </form>
+    <script>
+        function amarilloRequired(){
+            const hijos = document.getElementById('altaSocioForm').children; //guarda los elementos del formulario
+            Array.from(hijos).forEach(hijo => {//recorre los elementos de clase formulario
+                if(hijo.hasAttribute('required')){//comprueba que es requerido
+                    hijo.style["background-color"] = "yellow";//le añade un fondo amarillo
+                }
+            });
+        }
+
+        amarilloRequired();
+
+        function validarInput(restriccion,error){
+            if(restriccion!=false){
+                error.style["color"]="white";
+                error.style["background-color"]="red";
+            }else{
+                if(error.hasAttribute('required')){//comprueba que es requerido
+                    error.style["background-color"] = "yellow";//le añade un fondo amarillo
+                    error.style["color"]="black";
+                }else{
+                    error.style["color"]="black";
+                    error.style["background-color"]="white";
+                }
+            }
+            return restriccion;
+        }
+
+        function validarFormulario() {
+            funciona = true;
+            
+            // Validar Nombre
+            const nombre = document.getElementById("nombre");
+            if (validarInput((nombre.value.length < 3 || nombre.value.length > 30),nombre)){
+                funciona = false;
+            }
+
+            // Validar Apellidos
+            const apellidos = document.getElementById("apellidos");
+            if (validarInput((apellidos.value.length < 3 || apellidos.value.length > 60),apellidos)){
+                funciona = false;
+            }
+            // Si todas las validaciones se pasan, se envía el formulario
+            return funciona;
+        }
+    </script>
+</body>
+</html>
