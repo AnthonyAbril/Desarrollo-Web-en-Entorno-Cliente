@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // Función para establecer una cookie
+        function setCookie(nombre,valor,dias){
+            var fecha=new Date();//crea una fecha
+            fecha.setDate(fecha.getDate() + dias);//guarda fecha de hoy mas los dias que durara la cookie
+            expires=""+fecha.toUTCString();//introduce la fecha en UTC
+            document.cookie=nombre+ "=" + cookieValor;  //introducimos los valores
+            document.cookie = name + "=" + valor + ";" + expires + ";path=/";
+        }
+
+
+        // Función para obtener una cookie
+        function getCookie(name) {
+            const cname = name + "=";   //inicio del cookie buscado con su nombre
+            const ca = document.cookie.split(';');   //divide las lineas del documento en un array
+            for(let i = 0; i < ca.length; i++) {    //recorre el array de las lineas
+                let c = ca[i].trim();   //quita los espacios a ambos lados de la linea
+                if (c.indexOf(cname) === 0) {   //si la linea empieza con el nombre de la cookie a extraer
+                    return c.substring(cname.length, c.length); //devuelve la linea donde se extrae el valor
+                }
+            }
+            return "";
+        }
+
+        // Cargar los datos de las cookies al cargar la página
+        function cargarFormulario() {
+            const usuario = getCookie("usuario");
+            const clave = getCookie("clave");
+            const colorfondo = getCookie("colorfondo");
+
+            if (usuario) document.getElementById("usuario").value = usuario;
+            if (clave) document.getElementById("clave").value = clave;
+            if (colorfondo) {
+                document.getElementById("colorfondo").value = colorfondo;
+                document.body.style.backgroundColor = colorfondo;
+            }
+        }
+
+        // Guardar los datos en cookies cuando se envía el formulario
+        function guardarFormulario(event) {
+            const recordar = document.getElementById("recordar").checked;
+            if (recordar) {
+                const usuario = document.getElementById("usuario").value;
+                const clave = document.getElementById("clave").value;
+                const colorfondo = document.getElementById("colorfondo").value;
+
+                setCookie("usuario", usuario, 30);  // Guardar por 30 días
+                setCookie("clave", clave, 30);
+                setCookie("colorfondo", colorfondo, 30);
+            } else {
+                // Borrar cookies si no está seleccionado "Recordar"
+                setCookie("usuario", "", -1);
+                setCookie("clave", "", -1);
+                setCookie("colorfondo", "", -1);
+            }
+        }
+    </script>
+</head>
+<body onload="cargarFormulario()">
+    <form onsubmit="guardarFormulario(event)">
+        <fieldset>
+            <!--
+            Implementar un formulario de logueo personalizado, que presente los siguientes campos:
+                • Usuario: de texto para introducir el nombre de usuario
+                • Clave: de texto para introducir la password de usuario
+                • Color de fondo: para escribir el color de fondo deseado
+                • Recordar: checkbox para indicar si recordar los parámetros anteriores la próxima
+                vez que se acceda al formulario (usando cookies)
+                • Enviar: botón de envío del formulario
+            La interfaz puede ser similar a la siguiente:
+            -->
+            <legend>Formulario de logueo personalizado</legend>
+            <div>
+                <label for="usuario">Usuario:</label>
+                <input type="text" id="usuario" name="usuario">
+            </div>
+            <div>
+                <label for="clave">Contraseña:</label>
+                <input type="password" id="clave" name="clave">
+            </div>
+            <div>
+                <label for="colorfondo">Color de Fondo:</label>
+                <input type="text" id="colorfondo" name="colorfondo" placeholder="Ejemplo: #ffffff">
+            </div>
+            <div>
+                <input type="checkbox" id="recordar" name="recordar">
+                <label for="recordar">Recordar</label>
+            </div>
+            <button type="submit">Enviar</button>
+        </fieldset>
+    </form>
+</body>
+</html>
