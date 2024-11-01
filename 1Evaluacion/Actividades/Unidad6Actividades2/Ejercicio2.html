@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-repeat: no-repeat;
+        background-size: cover; /* Hace que la imagen cubra todo el fondo */
+        background-position: center; /* Centra la imagen */
+        margin: 0; /* Elimina los márgenes */
+        height: 100vh; /* Asegura que el fondo cubra toda la altura de la pantalla */
+      }
+      button {
+        border: none; /* Sin borde */
+      }
+      #atras {
+        float: left;
+        border-radius: 0 0 5px 0; /* Bordes redondeados */
+      }
+      #adelante {
+        border-radius: 0 0 0 5px; /* Bordes redondeados */
+        float: right;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <!--
+    El reproductor funcionará del siguiente modo: 
+        • En la carpeta img tendremos las imágenes que vamos a reproducir asegurandonos 
+        que  todas  tienen  el  mismo  tamaño.  Se  puede  crear  un  array  para  las  imágenes  a 
+        reproducir. 
+        • Tiene  que  haber  un  boton  ,  icono  o  similar  que  permitirá  que  avancemos  a  la 
+        siguiente imagen a reproducir y otro para retroceder a la anterior. Esto se realizará 
+        de forma cíclica. 
+        • Si  no  se  pulsa  ninguna  imagen,  habrá  un  temporizador  que  cada  3  segundos  va 
+        cambiando a la siguiente imagen.
+    -->
+    <button id="atras">atras</button>
+    <button id="adelante">adelante</button>
+    <script>
+      let imagenes = [
+        "img/prueba1.png",
+        "img/prueba2.png",
+        "img/prueba3.png",
+        "img/prueba4.png",
+      ];
+      let seleccion = 0;
+
+      imagen = document.body;
+      imagen.style["background-image"] = "url(" + imagenes[0] + ")";
+
+      atras = document.getElementById("atras");
+      atras.addEventListener("click", function () {
+        if (seleccion == 0) {
+          seleccion = imagenes.length - 1;
+        } else {
+          seleccion--;
+        }
+        imagen.style["background-image"] = "url(" + imagenes[seleccion] + ")";
+        reiniciarTemporizador();
+      });
+
+      adelante = document.getElementById("adelante");
+      adelante.addEventListener("click", function () {
+        if (seleccion == imagenes.length - 1) {
+          seleccion = 0;
+        } else {
+          seleccion++;
+        }
+        imagen.style["background-image"] = "url(" + imagenes[seleccion] + ")";
+        reiniciarTemporizador();
+      });
+      //AÑADIR Q AVANCE CADA 3 SEGUNDOS
+      let intervalId;
+      function iniciarTemporizador() {
+        intervalId = setInterval(function () {
+          if (seleccion == imagenes.length - 1) {
+            seleccion = 0;
+          } else {
+            seleccion++;
+          }
+          imagen.style["background-image"] = "url(" + imagenes[seleccion] + ")";
+        }, 3000);
+      }
+
+      function reiniciarTemporizador() {
+        clearInterval(intervalId); // Detiene el temporizador anterior
+        iniciarTemporizador(); // Inicia un nuevo temporizador
+      }
+      iniciarTemporizador();
+    </script>
+  </body>
+</html>

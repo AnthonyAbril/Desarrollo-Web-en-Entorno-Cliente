@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+      let ubicaciones = [
+        "Calle Colón, 32, 46004 Valencia",
+        "Calle San Vicente Mártir, 110, 46007 Valencia",
+        "Avenida del Puerto, 290, 46024 Valencia",
+        "Avenida Aragón, 26, 46021 Valencia",
+        "Calle Ruzafa, 34, 46006 Valencia",
+      ];
+      let maximo = 1;
+      function cargarCalles() {
+        let lista = "";
+
+        for (let index = 0; index < maximo; index++) {
+          lista += "<li>" + ubicaciones[index] + "</li>";
+        }
+        document.getElementById("ubicacion").innerHTML = lista;
+      }
+
+      let editoriales = [
+        "Planeta",
+        "Destino",
+        "Anagrama",
+        "Nórdica Libros",
+        "Anaya",
+      ];
+
+      function cargarEditoriales() {
+        let lista = "";
+        for (let index = 0; index < editoriales.length; index++) {
+          //lista += '<option value="' + '">' + editoriales[index] + "</option>";
+          lista += "<option>" + editoriales[index] + "</option>";
+        }
+
+        document.getElementById("editorial").innerHTML = lista;
+      }
+
+      function cargarFormulario() {
+        cargarCalles();
+        cargarEditoriales();
+      }
+      //AÑADIR VALIDACION DE PRECIO, QUE SOLO ENTREN NUMEROS MAYOR Q 0
+    </script>
+  </head>
+  <body onload="cargarFormulario();">
+    <h1>LIBRERIAS VALENCIA</h1>
+    <form>
+      <div>
+        <label for="titulo">TITULO: </label>
+        <input id="titulo" type="text" />
+      </div>
+      <div>
+        <label for="autor">AUTOR: </label>
+        <input id="autor" type="text" />
+      </div>
+      <div>
+        <label for="precio">PRECIO: </label>
+        <input id="precio" type="text" />
+      </div>
+      <div>
+        <label for="editorial">EDITORIAL:</label>
+        <select id="editorial"></select>
+      </div>
+      <div>
+        <button id="btnañadireditorial">AÑADIR EDITORIAL</button>
+        <input id="nuevaeditorial" type="text" />
+      </div>
+      <div id="ubicaciones">
+        <label>UBICACION:</label>
+        <ul id="ubicacion"></ul>
+        <button id="btnSumar">+</button>
+        <button id="btnRestar">-</button>
+      </div>
+      <button type="submit">Dar de alta</button>
+    </form>
+    <script>
+      let sumar = document.getElementById("btnSumar");
+      sumar.addEventListener("click", function (event) {
+        event.preventDefault(); //evita que recargue la pagina al pulsarlo
+        if (maximo < ubicaciones.length) maximo++;
+        cargarCalles();
+      });
+
+      let restar = document.getElementById("btnRestar");
+      restar.addEventListener("click", function (event) {
+        event.preventDefault(); //evita que recargue la pagina al pulsarlo
+        if (maximo > 1) maximo--;
+        cargarCalles();
+      });
+
+      let añadirEditorial = document.getElementById("btnañadireditorial");
+      let nuevaEditorial = document.getElementById("nuevaeditorial");
+      añadirEditorial.addEventListener("click", function (event) {
+        event.preventDefault(); //evita que recargue la pagina al pulsarlo
+        if (nuevaEditorial.value.trim()) {
+          editoriales.push(nuevaEditorial.value); //lo añade al aray
+          cargarEditoriales(); // Actualizar el desplegable después de agregar la nueva editorial
+          nuevaEditorial.value = ""; // Limpiar el campo de texto
+        }
+      });
+    </script>
+  </body>
+</html>
