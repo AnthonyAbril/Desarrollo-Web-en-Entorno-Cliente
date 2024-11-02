@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      th {
+        width: 10px;
+        height: 10px;
+      }
+      #amarillo {
+        background-color: yellow;
+      }
+      #verde {
+        background-color: verde;
+      }
+      #negro {
+        background-color: black;
+      }
+      #rojo {
+        background-color: red;
+      }
+      #azul {
+        background-color: blue;
+      }
+      #blanco {
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>TABLERO DE DIBUJO EN JAVASCRIPT</h1>
+    <div id="paleta">
+      <h3>Haga click en un color para comenzar a pintar</h3>
+    </div>
+    <div id="zonadibujo"></div>
+    <script>
+      colorElegido = "white";
+      estado = false; //pincel desactivado
+
+      function crearTablero() {
+        tabla = document.createElement("table"); //creamos la tabla
+        for (let f = 0; f < 30; f++) {
+          fila = document.createElement("tr"); //creamos una fila
+
+          for (let c = 0; c < 30; c++) {
+            celda = document.createElement("th"); //creamos una celda
+            celda.style["background-color"] = coloresDePaleta[0];
+            celda.addEventListener("mouseover", function () {
+              if (estado) {
+                this.style["background-color"] =
+                  document.getElementById("estado").style["background-color"];
+              }
+            });
+            celda.addEventListener("click", function () {
+              estado = !estado;
+            });
+            fila.appendChild(celda); //añadimos la celda a la fila
+          }
+
+          tabla.appendChild(fila); //añadimos la fila a la tabla
+        }
+
+        document.getElementById("zonadibujo").appendChild(tabla); //añadimos la tabla al dom
+      }
+
+      coloresDePaleta = ["yellow", "green", "black", "red", "blue", "white"];
+
+      function crearPaleta() {
+        tabla = document.createElement("table"); //creamos la tabla
+        fila = document.createElement("tr"); //creamos una fila
+
+        for (let index = 0; index < coloresDePaleta.length; index++) {
+          celda = document.createElement("th");
+          celda.style["background-color"] = coloresDePaleta[index];
+          celda.addEventListener("click", function () {
+            console.log(coloresDePaleta[index]); //imprimimos el color
+            document.getElementById("estado").style["background-color"] =
+              coloresDePaleta[index]; //al estado le ponemos el fondo del color de la celda clicada
+          });
+
+          fila.appendChild(celda); //añadimos la celda a la fila
+        }
+
+        fila2 = document.createElement("tr"); //creamos una fila
+        celda2 = document.createElement("th"); //creamos una celda
+        celda2.appendChild(document.createTextNode("pincel desactivado")); //le añadimos el texto
+        celda2.setAttribute("colspan", coloresDePaleta.length); //le añadimos el atributo colspan
+        celda2.setAttribute("id", "estado"); //le añadimos el atributo id de estado
+        fila2.appendChild(celda2); //añadimos la celda2 a la fila2
+
+        tabla.appendChild(fila); //añadimos la fila a la tabla
+        tabla.appendChild(fila2); //añadimos la fila2 a la tabla
+
+        document.getElementById("paleta").appendChild(tabla); //añadimos la tabla al dom
+      }
+
+      crearPaleta();
+      crearTablero();
+    </script>
+  </body>
+</html>
