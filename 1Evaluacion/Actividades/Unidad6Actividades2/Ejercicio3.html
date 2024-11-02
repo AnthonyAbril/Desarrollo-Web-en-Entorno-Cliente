@@ -49,12 +49,15 @@
             celda.style["background-color"] = coloresDePaleta[0];
             celda.addEventListener("mouseover", function () {
               if (estado) {
-                this.style["background-color"] =
-                  document.getElementById("estado").style["background-color"];
+                this.style["background-color"] = colorElegido;
               }
             });
             celda.addEventListener("click", function () {
               estado = !estado;
+              mensaje = estado ? "pincel activado" : "pincel desactivado";
+              document
+                .getElementById("estado")
+                .appendChild(document.createTextNode(mensaje));
             });
             fila.appendChild(celda); //añadimos la celda a la fila
           }
@@ -75,9 +78,8 @@
           celda = document.createElement("th");
           celda.style["background-color"] = coloresDePaleta[index];
           celda.addEventListener("click", function () {
-            console.log(coloresDePaleta[index]); //imprimimos el color
-            document.getElementById("estado").style["background-color"] =
-              coloresDePaleta[index]; //al estado le ponemos el fondo del color de la celda clicada
+            colorElegido = coloresDePaleta[index]; //al estado le ponemos el fondo del color de la celda clicada
+            console.log(colorElegido); //imprimimos el color
           });
 
           fila.appendChild(celda); //añadimos la celda a la fila
