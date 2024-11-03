@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      th {
+        width: 10px;
+        height: 10px;
+      }
+    </style>
+  </head>
+  <body></body>
+  <script>
+    nivel = 1;
+
+    switch (nivel) {
+      case 0: //Sencillo -> entre 10 y 20 columnas y filas de manera aleatoria. 25 minas.
+        minas = 25;
+        alto = Math.floor(Math.random() * 11) + 10;
+        ancho = Math.floor(Math.random() * 11) + 10;
+        break;
+      case 1: //Normal -> entre 20 y 40 columnas y filas de manera aleatoria. 60 minas.
+        minas = 60;
+        alto = Math.floor(Math.random() * 21) + 20;
+        ancho = Math.floor(Math.random() * 21) + 20;
+        break;
+
+      case 2: //Avanzado -> entre 40 y 80 columnas y filas de manera aleatoria. 100 minas
+        minas = 100;
+        alto = Math.floor(Math.random() * 41) + 40;
+        ancho = Math.floor(Math.random() * 41) + 40;
+        break;
+
+      case 3: //Experto -> entre 80 y 100 columnas y filas de manera aleatoria. 140 minas.
+        minas = 140;
+        alto = Math.floor(Math.random() * 21) + 80;
+        ancho = Math.floor(Math.random() * 21) + 80;
+        break;
+
+      default:
+        break;
+    }
+    console.log(alto);
+    encontradas = 0;
+
+    function generarNumerosAleatoriosUnicos(cantidad, maxNumero) {
+      let numerosAleatorios = new Set(); // Creamos un set
+
+      // Agregar números aleatorios únicos hasta alcanzar la cantidad deseada
+      while (numerosAleatorios.size < cantidad) {
+        let numeroAleatorio = Math.floor(Math.random() * maxNumero);
+        numerosAleatorios.add(numeroAleatorio); // El set evita duplicados automáticamente
+      }
+
+      // Convertir el set a un array y devolverlo
+      return Array.from(numerosAleatorios);
+    }
+
+    mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho); //Las posiciones de las minas
+    perdido = false;
+    function crearCasilla(posicion) {
+      casilla = document.createElement("th");
+      casilla.style["background-color"] = "grey";
+      casilla.setAttribute("id", posicion);
+      if (mapaDeMinas.includes(posicion)) {
+        casilla.setAttribute("class", "mina");
+        casilla.appendChild(document.createTextNode("m"));
+        casilla.addEventListener("click", function () {
+          this.style["background-color"] = "red";
+          alert("Has perdido");
+          for (element of document.getElementsByClassName("mina")) {
+            element.style["background-color"] = "red";
+          }
+        });
+      } else {
+        casilla.appendChild(document.createTextNode(minasCerca(posicion)));
+        casilla.addEventListener("click", function () {
+          descubrirAlrededores(posicion);
+        });
+      }
+      return casilla;
+    }
+
+    function descubrirAlrededores(posicion) {
+      let casillaActual = document.getElementById(posicion);
+
+      if (casillaActual.style["background-color"] === "white") {
+        return; // Evita descubrir casillas ya descubiertas
+      }
+
+      casillaActual.style["background-color"] = "white";
+
+      let alrededores = [
+        posicion - 1,
+        posicion + 1,
+        posicion - ancho,
+        posicion + ancho,
+      ];
+
+      for (const element of alrededores) {
+        let casillaVecina = document.getElementById(element);
+
+        if (
+          casillaVecina &&
+          !casillaVecina.classList.contains("mina") &&
+          casillaVecina.style["background-color"] !== "white"
+        ) {
+          if (casillaVecina.textContent === "0") {
+            descubrirAlrededores(element);
+          } else {
+            casillaVecina.style["background-color"] = "white";
+          }
+        }
+      }
+    }
+
+    function minasCerca(posicion) {
+      alrededores = [
+        posicion - 1,
+        posicion + 1,
+        posicion - ancho,
+        posicion - ancho + 1,
+        posicion - ancho - 1,
+        posicion + ancho,
+        posicion + ancho + 1,
+        posicion + ancho - 1,
+      ];
+
+      cerca = 0;
+      for (const element of alrededores) {
+        if (mapaDeMinas.includes(element)) cerca++;
+      }
+      return cerca;
+    }
+
+    function crearTablero() {
+      tabla = document.createElement("table");
+      for (let f = 0; f < alto; f++) {
+        fila = document.createElement("tr");
+        for (let c = 0; c < ancho; c++) {
+          casilla = crearCasilla(c + f * ancho);
+
+          fila.appendChild(casilla);
+        }
+        tabla.appendChild(fila);
+      }
+      document.body.appendChild(tabla);
+    }
+
+    crearTablero();
+  </script>
+</html>
