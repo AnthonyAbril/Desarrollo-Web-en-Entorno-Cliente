@@ -115,11 +115,7 @@
             !casillaVecina.classList.contains("mina") &&
             casillaVecina.style["background-color"] !== "white"
           ) {
-            if (casillaVecina.textContent === "0") {
-              descubrirAlrededores(element);
-            } else {
-              casillaVecina.style["background-color"] = "white";
-            }
+            descubrirAlrededores(element);
           }
         }
       }else{//se descubre solo la casilla actual
