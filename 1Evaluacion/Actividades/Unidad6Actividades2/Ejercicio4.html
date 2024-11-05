@@ -13,7 +13,7 @@
   </head>
   <body></body>
   <script>
-    nivel = 1;
+    nivel = 0;
 
     switch (nivel) {
       case 0: //Sencillo -> entre 10 y 20 columnas y filas de manera aleatoria. 25 minas.
@@ -86,34 +86,46 @@
     function descubrirAlrededores(posicion) {
       let casillaActual = document.getElementById(posicion);
 
+      //si ya esta descubierta no se descubre
       if (casillaActual.style["background-color"] === "white") {
         return; // Evita descubrir casillas ya descubiertas
       }
 
+      //se descubre la casilla
       casillaActual.style["background-color"] = "white";
 
-      let alrededores = [
-        posicion - 1,
-        posicion + 1,
-        posicion - ancho,
-        posicion + ancho,
-      ];
+      if(casillaActual.textContent === "0"){//si la casilla actual es 0 descubren las de alrededor
+        //guardamos las casillas que rodean la actual
+        let alrededores = [
+          posicion - 1,
+          posicion + 1,
+          posicion - ancho,
+          posicion + ancho,
+          posicion - ancho - 1,
+          posicion - ancho + 1,
+          posicion + ancho - 1,
+          posicion + ancho + 1,
+        ];
 
-      for (const element of alrededores) {
-        let casillaVecina = document.getElementById(element);
+        for (const element of alrededores) {
+          let casillaVecina = document.getElementById(element);
 
-        if (
-          casillaVecina &&
-          !casillaVecina.classList.contains("mina") &&
-          casillaVecina.style["background-color"] !== "white"
-        ) {
-          if (casillaVecina.textContent === "0") {
-            descubrirAlrededores(element);
-          } else {
-            casillaVecina.style["background-color"] = "white";
+          if (
+            casillaVecina &&
+            !casillaVecina.classList.contains("mina") &&
+            casillaVecina.style["background-color"] !== "white"
+          ) {
+            if (casillaVecina.textContent === "0") {
+              descubrirAlrededores(element);
+            } else {
+              casillaVecina.style["background-color"] = "white";
+            }
           }
         }
+      }else{//se descubre solo la casilla actual
+        
       }
+      
     }
 
     function minasCerca(posicion) {
@@ -141,7 +153,7 @@
         fila = document.createElement("tr");
         for (let c = 0; c < ancho; c++) {
           casilla = crearCasilla(c + f * ancho);
-
+          
           fila.appendChild(casilla);
         }
         tabla.appendChild(fila);
