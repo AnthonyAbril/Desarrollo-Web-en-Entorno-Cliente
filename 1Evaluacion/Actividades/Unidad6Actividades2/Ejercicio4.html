@@ -41,7 +41,7 @@
     <div id="tablero"></div>
   </body>
   <script>
-    nivel = 0;
+    nivel = 1;
 
     switch (nivel) {
       case 0: //Sencillo -> entre 10 y 20 columnas y filas de manera aleatoria. 25 minas.
@@ -93,6 +93,7 @@
       perdido = true;
       for (element of document.getElementsByClassName("mina")) {
         element.style["background-color"] = "red";
+        element.querySelector("span").style.visibility = "visible"; // Mostrar el contenido al descubrir
       }
     }
 
@@ -100,23 +101,35 @@
       casilla = document.createElement("th");
       casilla.style["background-color"] = "grey";
       casilla.setAttribute("id", posicion);
+
+      let contenido = document.createElement("span"); // Crear un span para el contenido
+      contenido.style.visibility = "hidden"; // Ocultar el contenido inicialmente
+
       if (mapaDeMinas.includes(posicion)) {
         casilla.setAttribute("class", "mina");
-        casilla.appendChild(document.createTextNode("m"));
+        contenido.textContent = "m";
         casilla.addEventListener("click", function () {
           perder();
         });
       } else {
-        casilla.appendChild(document.createTextNode(minasCerca(posicion)));
+        contenido.textContent = minasCerca(posicion);
         casilla.addEventListener("click", function () {
           descubrirAlrededores(posicion);
         });
       }
+
+      casilla.addEventListener("click", function(){
+        contenido.style.visibility = "visible"; // Ocultar el contenido inicialmente
+      })
+
+      casilla.appendChild(contenido); // Agregar el span a la casilla
+
       return casilla;
     }
 
     function descubrirAlrededores(posicion) {
       let casillaActual = document.getElementById(posicion);
+      let contenidoActual = casillaActual.querySelector("span");
 
       //si ya esta descubierta no se descubre
       if (casillaActual.style["background-color"] === "white") {
@@ -125,8 +138,9 @@
 
       //se descubre la casilla
       casillaActual.style["background-color"] = "white";
+      contenidoActual.style.visibility = "visible"; // Mostrar el contenido al descubrir
 
-      if(casillaActual.textContent === "0"){//si la casilla actual es 0 descubren las de alrededor
+      if(contenidoActual.textContent === "0"){//si la casilla actual es 0 descubren las de alrededor
         //guardamos las casillas que rodean la actual
         let alrededores = [
           posicion - 1,
