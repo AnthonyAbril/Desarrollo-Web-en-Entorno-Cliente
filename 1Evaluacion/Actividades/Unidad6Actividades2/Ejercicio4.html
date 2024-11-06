@@ -74,36 +74,6 @@
     alto = null;
     ancho = null;
 
-    
-    /*
-    switch (nivel) {
-      case 0: //Sencillo -> entre 10 y 20 columnas y filas de manera aleatoria. 25 minas.
-        minas = 25;
-        alto = Math.floor(Math.random() * 11) + 10;
-        ancho = Math.floor(Math.random() * 11) + 10;
-        break;
-      case 1: //Normal -> entre 20 y 40 columnas y filas de manera aleatoria. 60 minas.
-        minas = 60;
-        alto = Math.floor(Math.random() * 21) + 20;
-        ancho = Math.floor(Math.random() * 21) + 20;
-        break;
-
-      case 2: //Avanzado -> entre 40 y 80 columnas y filas de manera aleatoria. 100 minas
-        minas = 100;
-        alto = Math.floor(Math.random() * 41) + 40;
-        ancho = Math.floor(Math.random() * 41) + 40;
-        break;
-
-      case 3: //Experto -> entre 80 y 100 columnas y filas de manera aleatoria. 140 minas.
-        minas = 140;
-        alto = Math.floor(Math.random() * 21) + 80;
-        ancho = Math.floor(Math.random() * 21) + 80;
-        break;
-
-      default:
-        break;
-    }*/
-
     encontradas = 0;
 
     function generarNumerosAleatoriosUnicos(cantidad, maxNumero) {
@@ -240,6 +210,9 @@
       cuadro = document.getElementById("cuadro");
       cuadro.style.visibility = "visible";
 
+      barraSuperior = document.getElementById("barraSuperior");
+      barraSuperior.style.visibility = "hidden";
+
       //creador de selector de nivel
       for (let index = 0; index < niveles.length; index++) {
         nivel = niveles[index];//guardamos el nivel
@@ -248,6 +221,7 @@
         boton.appendChild(document.createTextNode(nivel[0]));//ponemos el nombre del nivel en el boton
         boton.addEventListener("click",function(){
           cuadro.style.visibility = "hidden";
+          barraSuperior.style.visibility = "visible";
           
           nivel = niveles[index];//guardamos el nivel
           //sacar info de array
