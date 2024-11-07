@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <style>      
-
+    <style>
       th {
         width: 20px;
         height: 20px;
@@ -26,11 +25,11 @@
         width: max-content; /* Asegura que las celdas no se expandan automáticamente */
       }
 
-      p{
+      p {
         display: inline-block;
       }
 
-      #cuadro{
+      #cuadro {
         position: fixed;
         left: 50%;
         top: 50%;
@@ -41,18 +40,17 @@
         padding: 5%;
       }
 
-      button{
+      button {
         margin: 0 auto; /* Centra el botón horizontalmente */
         padding: 10px 20px;
       }
-      
     </style>
   </head>
   <body>
     <div id="barraSuperior">
-      <p id="tiempo">Tiempo: </p>
-      <p id="minas">Minas: </p>
-      <p id="nivel">Nivel: </p>
+      <p id="tiempo">Tiempo:</p>
+      <p id="minas">Minas:</p>
+      <p id="nivel">Nivel:</p>
     </div>
     <div id="tablero"></div>
     <div id="cuadro">
@@ -60,19 +58,20 @@
     </div>
   </body>
   <script>
-
     niveles = [
       //creacion de array [nombre, numero de minas, minimo numero de filas y columnas, maximo numero de filas y columna]
-      ["Sencillo",25,10,20], 
-      ["Normal",60,20,40],
-      ["Avanzado",100,40,80],
-      ["Experto",140,80,100]
+      ["Sencillo", 25, 10, 20],
+      ["Normal", 60, 20, 40],
+      ["Avanzado", 100, 40, 80],
+      ["Experto", 140, 80, 100],
     ];
 
     nombre = null;
     minas = null;
     alto = null;
     ancho = null;
+
+    mapaDeMinas = null; //Las posiciones de las minas
 
     encontradas = 0;
 
@@ -89,48 +88,15 @@
       return Array.from(numerosAleatorios);
     }
 
-    mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho); //Las posiciones de las minas
     perdido = false;
 
-    function perder(){
+    function perder() {
       alert("Has perdido");
       perdido = true;
       for (element of document.getElementsByClassName("mina")) {
         element.style["background-color"] = "red";
         element.querySelector("span").style.visibility = "visible"; // Mostrar el contenido al descubrir
       }
-    }
-
-    function crearCasilla(posicion) {
-      casilla = document.createElement("th");
-      casilla.style["background-color"] = "grey";
-      casilla.setAttribute("id", posicion);
-
-      let contenido = document.createElement("span"); // Crear un span para el contenido
-      contenido.style.visibility = "hidden"; // Ocultar el contenido inicialmente
-
-      if (mapaDeMinas.includes(posicion)) {
-        casilla.setAttribute("class", "mina");
-        contenido.textContent = "m";
-      } else {
-        contenido.textContent = minasCerca(posicion);
-      }
-
-      casilla.addEventListener("click", function(){
-        if(!perdido){
-          contenido.style.visibility = "visible"; // Visibilizar contenido
-
-          if (mapaDeMinas.includes(posicion)) {
-            perder();
-          } else {
-            descubrirAlrededores(posicion);
-          }
-        }
-      })
-
-      casilla.appendChild(contenido); // Agregar el span a la casilla
-
-      return casilla;
     }
 
     function descubrirAlrededores(posicion) {
@@ -146,7 +112,8 @@
       casillaActual.style["background-color"] = "white";
       contenidoActual.style.visibility = "visible"; // Mostrar el contenido al descubrir
 
-      if(contenidoActual.textContent === "0"){//si la casilla actual es 0 descubren las de alrededor
+      if (contenidoActual.textContent === "0") {
+        //si la casilla actual es 0 descubren las de alrededor
         //guardamos las casillas que rodean la actual
         let alrededores = [
           posicion - 1,
@@ -171,6 +138,38 @@
           }
         }
       }
+    }
+
+    function crearCasilla(posicion) {
+      casilla = document.createElement("th");
+      casilla.style["background-color"] = "grey";
+      casilla.setAttribute("id", posicion);
+
+      let contenido = document.createElement("span"); // Crear un span para el contenido
+      contenido.style.visibility = "hidden"; // Ocultar el contenido inicialmente
+
+      if (mapaDeMinas.includes(posicion)) {
+        casilla.setAttribute("class", "mina");
+        contenido.textContent = "m";
+      } else {
+        contenido.textContent = minasCerca(posicion);
+      }
+
+      casilla.addEventListener("click", function () {
+        if (!perdido) {
+          contenido.style.visibility = "visible"; // Visibilizar contenido
+
+          if (mapaDeMinas.includes(posicion)) {
+            perder();
+          } else {
+            descubrirAlrededores(posicion);
+          }
+        }
+      });
+
+      casilla.appendChild(contenido); // Agregar el span a la casilla
+
+      return casilla;
     }
 
     function minasCerca(posicion) {
@@ -198,7 +197,7 @@
         fila = document.createElement("tr");
         for (let c = 0; c < ancho; c++) {
           casilla = crearCasilla(c + f * ancho);
-          
+
           fila.appendChild(casilla);
         }
         tabla.appendChild(fila);
@@ -206,7 +205,7 @@
       document.getElementById("tablero").appendChild(tabla);
     }
 
-    function selectorDeNivel(){
+    function selectorDeNivel() {
       cuadro = document.getElementById("cuadro");
       cuadro.style.visibility = "visible";
 
@@ -215,37 +214,45 @@
 
       //creador de selector de nivel
       for (let index = 0; index < niveles.length; index++) {
-        nivel = niveles[index];//guardamos el nivel
+        nivel = niveles[index]; //guardamos el nivel
 
-        boton = document.createElement("button");//creamos un boton para ese nivel
-        boton.appendChild(document.createTextNode(nivel[0]));//ponemos el nombre del nivel en el boton
-        boton.addEventListener("click",function(){
+        boton = document.createElement("button"); //creamos un boton para ese nivel
+        boton.appendChild(document.createTextNode(nivel[0])); //ponemos el nombre del nivel en el boton
+        boton.addEventListener("click", function () {
           cuadro.style.visibility = "hidden";
           barraSuperior.style.visibility = "visible";
-          
-          nivel = niveles[index];//guardamos el nivel
+
+          nivel = niveles[index]; //guardamos el nivel
           //sacar info de array
           nombre = nivel[0];
           minas = nivel[1];
-          alto = Math.floor(Math.random() * nivel[3]-nivel[2]) + nivel[2];
-          ancho = Math.floor(Math.random() * nivel[3]-nivel[2]) + nivel[2];
+          alto = Math.floor(Math.random() * nivel[3] - nivel[2]) + nivel[2];
+          ancho = Math.floor(Math.random() * nivel[3] - nivel[2]) + nivel[2];
+
+          mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho); //Las posiciones de las minas
 
           crearTablero();
         });
 
-        texto = document.createElement("p");//creamos el texto de detalles del nivel
-        lista = " -> entre "+nivel[2]+" y "+nivel[3]+" columnas y filas de manera aleatoria. "+nivel[1]+" minas."
-        texto.innerHTML=lista;
+        texto = document.createElement("p"); //creamos el texto de detalles del nivel
+        lista =
+          " -> entre " +
+          nivel[2] +
+          " y " +
+          nivel[3] +
+          " columnas y filas de manera aleatoria. " +
+          nivel[1] +
+          " minas.";
+        texto.innerHTML = lista;
 
-        cuadro.appendChild(boton);//se añade el boton al cuadro
-        cuadro.appendChild(texto);//se añade el texto al cuadro
-        cuadro.appendChild(document.createElement("br"));//salto de linea
+        cuadro.appendChild(boton); //se añade el boton al cuadro
+        cuadro.appendChild(texto); //se añade el texto al cuadro
+        cuadro.appendChild(document.createElement("br")); //salto de linea
       }
 
       return null;
     }
 
     selectorDeNivel();
-
   </script>
 </html>
