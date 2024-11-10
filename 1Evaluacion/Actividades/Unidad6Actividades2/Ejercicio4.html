@@ -3,32 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Buscaminas</title>
     <style>
       th {
         width: 20px;
         height: 20px;
         text-align: center;
         border: 1px solid black;
+        background-color: grey;
       }
-
-      /* Limita el ancho y el alto de la tabla */
       #tablero {
         max-width: 100vw;
-        max-height: 100vw;
-        overflow: auto; /* Permite desplazarse en caso de ser necesario */
+        max-height: 100vh;
+        overflow: auto;
       }
-
-      /* Asegura que las celdas sean cuadradas incluso si se ajusta el tamaño de la tabla */
       #tablero table {
-        /*table-layout: fixed;*/
-        width: max-content; /* Asegura que las celdas no se expandan automáticamente */
+        width: max-content;
       }
-
       p {
         display: inline-block;
       }
-
       #cuadro {
         position: fixed;
         left: 50%;
@@ -36,12 +30,9 @@
         transform: translate(-50%, -50%);
         background-color: red;
         text-align: center;
-        align-content: center; /* Centra el contenido horizontalmente */
         padding: 5%;
       }
-
       button {
-        margin: 0 auto; /* Centra el botón horizontalmente */
         padding: 10px 20px;
       }
     </style>
@@ -56,73 +47,132 @@
     <div id="cuadro">
       <h3>ELIGE EL NIVEL:</h3>
     </div>
-  </body>
-  <script>
-    document.addEventListener("contextmenu", function (event) {
-      event.preventDefault(); //desactivamos la funcion por defecto del click derecho
-    });
 
-    niveles = [
-      //creacion de array [nombre, numero de minas, minimo numero de filas y columnas, maximo numero de filas y columna]
-      ["Sencillo", 25, 10, 20],
-      ["Normal", 60, 20, 40],
-      ["Avanzado", 100, 40, 80],
-      ["Experto", 140, 80, 100],
-    ];
+    <script>
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault()
+      );
 
-    nombre = null;
-    minas = null;
-    alto = null;
-    ancho = null;
+      let niveles = [
+        ["Sencillo", 25, 10, 20],
+        ["Normal", 60, 20, 40],
+        ["Avanzado", 100, 40, 60],
+        ["Experto", 140, 80, 100],
+      ];
 
-    mapaDeMinas = null; //Las posiciones de las minas
+      let nombre, minas, alto, ancho, mapaDeMinas, minasRestantes, perdido;
+      let intervalId,
+        tiempo = 0;
 
-    minasRestantes = 0;
-
-    function generarNumerosAleatoriosUnicos(cantidad, maxNumero) {
-      let numerosAleatorios = new Set(); // Creamos un set
-
-      // Agregar números aleatorios únicos hasta alcanzar la cantidad deseada
-      while (numerosAleatorios.size < cantidad) {
-        let numeroAleatorio = Math.floor(Math.random() * maxNumero);
-        numerosAleatorios.add(numeroAleatorio); // El set evita duplicados automáticamente
+      function generarNumerosAleatoriosUnicos(cantidad, maxNumero) {
+        const numeros = new Set();
+        while (numeros.size < cantidad) {
+          numeros.add(Math.floor(Math.random() * maxNumero));
+        }
+        return Array.from(numeros);
       }
 
-      // Convertir el set a un array y devolverlo
-      return Array.from(numerosAleatorios);
-    }
-
-    perdido = false;
-
-    function perder() {
-      alert("Has perdido");
-      perdido = true;
-      for (element of document.getElementsByClassName("mina")) {
-        element.style["background-color"] = "red";
-        element.querySelector("span").style.visibility = "visible"; // Mostrar el contenido al descubrir
-        element.innerText = element.getAttribute("value"); // Añadir el valor al contenido
-        clearInterval(intervalId); //Deja de contar
-      }
-    }
-
-    function descubrirAlrededores(posicion) {
-      let casillaActual = document.getElementById(posicion);
-      let contenidoActual = casillaActual.querySelector("span");
-
-      //si ya esta descubierta no se descubre
-      if (casillaActual.style["background-color"] === "white") {
-        return; // Evita descubrir casillas ya descubiertas
+      function perder() {
+        alert("Has perdido");
+        perdido = true;
+        clearInterval(intervalId);
+        document.querySelectorAll(".mina").forEach((element) => {
+          element.style.backgroundColor = "red";
+          element.querySelector("span").style.visibility = "visible";
+        });
       }
 
-      //se descubre la casilla
-      casillaActual.style["background-color"] = "white";
-      contenidoActual.style.visibility = "visible"; // Mostrar el contenido al descubrir
-      contenidoActual.textContent = casillaActual.getAttribute("value"); // Añadir el valor al contenido
+      function descubrirAlrededores(posicion) {
+        const casilla = document.getElementById(posicion);
+        if (
+          casilla.style.backgroundColor === "white" ||
+          casilla.classList.contains("mina")
+        )
+          return;
 
-      if (contenidoActual.textContent === "0") {
-        //si la casilla actual es 0 descubren las de alrededor
-        //guardamos las casillas que rodean la actual
-        let alrededores = [
+        casilla.style.backgroundColor = "white";
+        const contenido = casilla.querySelector("span");
+        contenido.style.visibility = "visible";
+        contenido.textContent = casilla.getAttribute("value");
+
+        const valor = casilla.getAttribute("value");
+        if (valor === "0") {
+          let alrededores = [
+            posicion - 1,
+            posicion + 1,
+            posicion - ancho,
+            posicion + ancho,
+            posicion - ancho - 1,
+            posicion - ancho + 1,
+            posicion + ancho - 1,
+            posicion + ancho + 1,
+          ];
+          alrededores.forEach((adj) => {
+            if (document.getElementById(adj)) descubrirAlrededores(adj);
+          });
+        }
+      }
+
+      function crearCasilla(posicion) {
+        const casilla = document.createElement("th");
+        casilla.id = posicion;
+        const contenido = document.createElement("span");
+        contenido.style.visibility = "hidden";
+        casilla.appendChild(contenido);
+
+        if (mapaDeMinas.includes(posicion)) {
+          casilla.classList.add("mina");
+          casilla.setAttribute("value", "m");
+        } else {
+          let valor = minasCerca(posicion);
+          casilla.setAttribute("value", valor);
+        }
+
+        let clickCount = 0;
+        casilla.addEventListener("mousedown", (event) => {
+          if (perdido) return;
+
+          // Click izquierdo
+          if (event.button === 0 && casilla.style.backgroundColor !== "white") {
+            if (casilla.classList.contains("mina")) {
+              perder();
+            } else {
+              descubrirAlrededores(posicion);
+            }
+          }
+          // Click derecho para marcar o desmarcar
+          else if (
+            event.button === 2 &&
+            casilla.style.backgroundColor !== "white"
+          ) {
+            clickCount = (clickCount + 1) % 3;
+            if (clickCount === 1) {
+              casilla.style.backgroundColor = "yellow";
+              contenido.textContent = "?";
+            } else if (clickCount === 2) {
+              casilla.style.backgroundColor = "red";
+              contenido.textContent = "M";
+              minasRestantes--;
+              document.getElementById("minas").textContent =
+                "Minas restantes: " + minasRestantes;
+              if (minasRestantes == 0) {
+                //revise si las asignadas (guardadas en un array elegidas por su atributo) son las mismas q el de mapa de minas
+              }
+            } else {
+              casilla.style.backgroundColor = "grey";
+              contenido.textContent = "";
+              minasRestantes++;
+              document.getElementById("minas").textContent =
+                "Minas restantes: " + minasRestantes;
+            }
+          }
+        });
+
+        return casilla;
+      }
+
+      function minasCerca(posicion) {
+        const alrededores = [
           posicion - 1,
           posicion + 1,
           posicion - ancho,
@@ -132,186 +182,70 @@
           posicion + ancho - 1,
           posicion + ancho + 1,
         ];
+        return alrededores.reduce(
+          (cont, adj) => cont + mapaDeMinas.includes(adj),
+          0
+        );
+      }
 
-        for (const element of alrededores) {
-          let casillaVecina = document.getElementById(element);
-
-          if (
-            casillaVecina &&
-            !casillaVecina.classList.contains("mina") &&
-            casillaVecina.style["background-color"] !== "white"
-          ) {
-            descubrirAlrededores(element);
+      function crearTablero() {
+        const tablero = document.getElementById("tablero");
+        tablero.innerHTML = ""; // Limpia el tablero
+        const tabla = document.createElement("table");
+        for (let f = 0; f < alto; f++) {
+          const fila = document.createElement("tr");
+          for (let c = 0; c < ancho; c++) {
+            const posicion = c + f * ancho;
+            fila.appendChild(crearCasilla(posicion));
           }
+          tabla.appendChild(fila);
         }
+        tablero.appendChild(tabla);
       }
-    }
 
-    function crearCasilla(posicion) {
-      casilla = document.createElement("th");
-      casilla.style["background-color"] = "grey";
-      casilla.setAttribute("id", posicion);
+      function selectorDeNivel() {
+        const cuadro = document.getElementById("cuadro");
+        cuadro.style.visibility = "visible";
+        document.getElementById("barraSuperior").style.visibility = "hidden";
 
-      let contenido = document.createElement("span"); // Crear un span para el contenido
-      contenido.style.visibility = "hidden"; // Ocultar el contenido inicialmente
+        niveles.forEach((nivel) => {
+          const boton = document.createElement("button");
+          boton.textContent = nivel[0];
+          boton.addEventListener("click", () => {
+            cuadro.style.visibility = "hidden";
+            document.getElementById("barraSuperior").style.visibility =
+              "visible";
 
-      if (mapaDeMinas.includes(posicion)) {
-        casilla.setAttribute("class", "mina");
-        valor = "m";
-      } else {
-        valor = minasCerca(posicion);
-      }
-      casilla.setAttribute("value", valor);
+            nombre = nivel[0];
+            minas = nivel[1];
+            alto = Math.floor(Math.random() * (nivel[3] - nivel[2])) + nivel[2];
+            ancho =
+              Math.floor(Math.random() * (nivel[3] - nivel[2])) + nivel[2];
+            minasRestantes = minas;
+            perdido = false;
+            tiempo = 0;
 
-      let clickCount = 0; // Contador de clics para manejar el clic derecho
+            mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho);
+            iniciarTemporizador();
 
-      // Añade un manejador de eventos para los clics en la casilla
-      casilla.addEventListener("mousedown", function (event) {
-        if (event.button === 0) {
-          if (!perdido) {
-            if (casilla.getAttribute("data-estado") === "interrogacion") {
-              // Si la casilla está marcada con "?", la descubrimos
-              contenido.style.visibility = "visible";
-              if (mapaDeMinas.includes(posicion)) {
-                perder(); // Si es mina, el jugador pierde
-              } else {
-                descubrirAlrededores(posicion); // Descubre las casillas vecinas
-              }
-            } else {
-              contenido.style.visibility = "visible"; // Muestra el contenido
-              contenido.textContent = valor;
-              if (mapaDeMinas.includes(posicion)) {
-                perder(); // Si es mina, el jugador pierde
-              } else {
-                descubrirAlrededores(posicion); // Descubre las casillas vecinas
-              }
-            }
-          }
-        } else if (event.button === 2) {
-          // click derecho
-          clickCount++;
-          if (clickCount === 1) {
-            // Marca con una interrogación
-            contenido.innerHTML = "?";
-            casilla.style["background-color"] = "yellow"; // Cambiar el fondo al hacer click derecho
-            casilla.setAttribute("data-estado", "interrogacion");
-          } else if (clickCount === 2) {
-            // Marca como mina
-            casilla.innerHTML = "M";
-            casilla.style["background-color"] = "red"; // Fondo rojo para mina
-            casilla.setAttribute("data-estado", "mina");
-            minasRestantes--;
-            document.getElementById("minas").innerText =
-              "Minas restantes: " + minasRestantes;
-            clickCount = 0;
-          }
-        }
-      });
-
-      casilla.appendChild(contenido); // Agregar el span a la casilla
-
-      return casilla;
-    }
-
-    function minasCerca(posicion) {
-      alrededores = [
-        posicion - 1,
-        posicion + 1,
-        posicion - ancho,
-        posicion - ancho + 1,
-        posicion - ancho - 1,
-        posicion + ancho,
-        posicion + ancho + 1,
-        posicion + ancho - 1,
-      ];
-
-      cerca = 0;
-      for (const element of alrededores) {
-        if (mapaDeMinas.includes(element)) cerca++;
-      }
-      return cerca;
-    }
-
-    function crearTablero() {
-      tabla = document.createElement("table");
-      for (let f = 0; f < alto; f++) {
-        fila = document.createElement("tr");
-        for (let c = 0; c < ancho; c++) {
-          casilla = crearCasilla(c + f * ancho);
-
-          fila.appendChild(casilla);
-        }
-        tabla.appendChild(fila);
-      }
-      document.getElementById("tablero").appendChild(tabla);
-    }
-
-    function selectorDeNivel() {
-      cuadro = document.getElementById("cuadro");
-      cuadro.style.visibility = "visible";
-
-      barraSuperior = document.getElementById("barraSuperior");
-      barraSuperior.style.visibility = "hidden";
-
-      //creador de selector de nivel
-      for (let index = 0; index < niveles.length; index++) {
-        nivel = niveles[index]; //guardamos el nivel
-
-        boton = document.createElement("button"); //creamos un boton para ese nivel
-        boton.appendChild(document.createTextNode(nivel[0])); //ponemos el nombre del nivel en el boton
-        boton.addEventListener("click", function () {
-          cuadro.style.visibility = "hidden";
-          barraSuperior.style.visibility = "visible";
-
-          nivel = niveles[index]; //guardamos el nivel
-          //sacar info de array
-          nombre = nivel[0];
-          minas = nivel[1];
-          alto = Math.floor(Math.random() * nivel[3] - nivel[2]) + nivel[2];
-          ancho = Math.floor(Math.random() * nivel[3] - nivel[2]) + nivel[2];
-          minasRestantes = minas;
-
-          mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho); //Las posiciones de las minas
-
-          iniciarTemporizador();
-          document.getElementById("nivel").innerHTML = "Nivel: " + nombre;
-
-          document.getElementById("minas").innerHTML =
-            "Minas: " + minasRestantes;
-
-          crearTablero();
+            document.getElementById("nivel").textContent = "Nivel: " + nombre;
+            document.getElementById("minas").textContent =
+              "Minas: " + minasRestantes;
+            crearTablero();
+          });
+          cuadro.appendChild(boton);
+          cuadro.appendChild(document.createElement("br"));
         });
-
-        texto = document.createElement("p"); //creamos el texto de detalles del nivel
-        lista =
-          " -> entre " +
-          nivel[2] +
-          " y " +
-          nivel[3] +
-          " columnas y filas de manera aleatoria. " +
-          nivel[1] +
-          " minas.";
-        texto.innerHTML = lista;
-
-        cuadro.appendChild(boton); //se añade el boton al cuadro
-        cuadro.appendChild(texto); //se añade el texto al cuadro
-        cuadro.appendChild(document.createElement("br")); //salto de linea
       }
 
-      return null;
-    }
+      function iniciarTemporizador() {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(() => {
+          document.getElementById("tiempo").textContent = "Tiempo: " + tiempo++;
+        }, 1000);
+      }
 
-    selectorDeNivel();
-
-    //barra superior
-    temporizador = document.getElementById("tiempo");
-    tiempo = 1;
-    function iniciarTemporizador() {
-      intervalId = setInterval(function () {
-        //añadir tiempo si aun no se ha perdido o ganado
-        temporizador.innerHTML = "Tiempo: " + tiempo++;
-      }, 1000);
-      1;
-    }
-  </script>
+      selectorDeNivel();
+    </script>
+  </body>
 </html>
