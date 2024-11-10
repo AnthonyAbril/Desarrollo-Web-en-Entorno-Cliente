@@ -48,9 +48,9 @@
   </head>
   <body>
     <div id="barraSuperior">
-      <p id="tiempo">Tiempo:</p>
+      <p id="tiempo">Tiempo: 0</p>
       <p id="minas">Minas:</p>
-      <p id="nivel">Nivel:</p>
+      <p id="nivel"></p>
     </div>
     <div id="tablero"></div>
     <div id="cuadro">
@@ -58,6 +58,10 @@
     </div>
   </body>
   <script>
+    document.addEventListener("contextmenu", function (event) {
+      event.preventDefault(); //desactivamos la funcion por defecto del click derecho
+    });
+
     niveles = [
       //creacion de array [nombre, numero de minas, minimo numero de filas y columnas, maximo numero de filas y columna]
       ["Sencillo", 25, 10, 20],
@@ -73,7 +77,7 @@
 
     mapaDeMinas = null; //Las posiciones de las minas
 
-    encontradas = 0;
+    minasRestantes = 0;
 
     function generarNumerosAleatoriosUnicos(cantidad, maxNumero) {
       let numerosAleatorios = new Set(); // Creamos un set
@@ -96,6 +100,8 @@
       for (element of document.getElementsByClassName("mina")) {
         element.style["background-color"] = "red";
         element.querySelector("span").style.visibility = "visible"; // Mostrar el contenido al descubrir
+        element.innerText = element.getAttribute("value"); // Añadir el valor al contenido
+        clearInterval(intervalId); //Deja de contar
       }
     }
 
@@ -111,6 +117,7 @@
       //se descubre la casilla
       casillaActual.style["background-color"] = "white";
       contenidoActual.style.visibility = "visible"; // Mostrar el contenido al descubrir
+      contenidoActual.textContent = casillaActual.getAttribute("value"); // Añadir el valor al contenido
 
       if (contenidoActual.textContent === "0") {
         //si la casilla actual es 0 descubren las de alrededor
@@ -150,19 +157,43 @@
 
       if (mapaDeMinas.includes(posicion)) {
         casilla.setAttribute("class", "mina");
-        contenido.textContent = "m";
+        valor = "m";
       } else {
-        contenido.textContent = minasCerca(posicion);
+        valor = minasCerca(posicion);
       }
+      casilla.setAttribute("value", valor);
 
-      casilla.addEventListener("click", function () {
-        if (!perdido) {
-          contenido.style.visibility = "visible"; // Visibilizar contenido
+      clickCount = 0;
+      casilla.addEventListener("mousedown", function (event) {
+        if (event.button === 0) {
+          // click izquierdo
+          if (!perdido) {
+            contenido.style.visibility = "visible";
+            contenido.textContent = valor;
 
-          if (mapaDeMinas.includes(posicion)) {
-            perder();
-          } else {
-            descubrirAlrededores(posicion);
+            if (mapaDeMinas.includes(posicion)) {
+              perder();
+            } else {
+              descubrirAlrededores(posicion);
+            }
+          }
+        } else if (event.button === 2) {
+          // click derecho
+          clickCount++;
+          if (clickCount === 1) {
+            // Marca con una interrogación
+            casilla.innerHTML = "?";
+            casilla.style["background-color"] = "yellow"; // Cambiar el fondo al hacer click derecho
+            casilla.setAttribute("data-estado", "interrogacion");
+          } else if (clickCount === 2) {
+            // Marca como mina
+            casilla.innerHTML = "M";
+            casilla.style["background-color"] = "red"; // Fondo rojo para mina
+            casilla.setAttribute("data-estado", "mina");
+            minasRestantes--;
+            document.getElementById("minas").innerText =
+              "Minas restantes: " + minasRestantes;
+            clickCount = 0;
           }
         }
       });
@@ -228,8 +259,15 @@
           minas = nivel[1];
           alto = Math.floor(Math.random() * nivel[3] - nivel[2]) + nivel[2];
           ancho = Math.floor(Math.random() * nivel[3] - nivel[2]) + nivel[2];
+          minasRestantes = minas;
 
           mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho); //Las posiciones de las minas
+
+          iniciarTemporizador();
+          document.getElementById("nivel").innerHTML = "Nivel: " + nombre;
+
+          document.getElementById("minas").innerHTML =
+            "Minas: " + minasRestantes;
 
           crearTablero();
         });
@@ -254,5 +292,16 @@
     }
 
     selectorDeNivel();
+
+    //barra superior
+    temporizador = document.getElementById("tiempo");
+    tiempo = 1;
+    function iniciarTemporizador() {
+      intervalId = setInterval(function () {
+        //añadir tiempo si aun no se ha perdido o ganado
+        temporizador.innerHTML = "Tiempo: " + tiempo++;
+      }, 1000);
+      1;
+    }
   </script>
 </html>
