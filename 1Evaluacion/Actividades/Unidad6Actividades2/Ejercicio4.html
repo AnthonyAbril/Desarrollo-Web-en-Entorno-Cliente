@@ -163,18 +163,28 @@
       }
       casilla.setAttribute("value", valor);
 
-      clickCount = 0;
+      let clickCount = 0; // Contador de clics para manejar el clic derecho
+
+      // Añade un manejador de eventos para los clics en la casilla
       casilla.addEventListener("mousedown", function (event) {
         if (event.button === 0) {
-          // click izquierdo
           if (!perdido) {
-            contenido.style.visibility = "visible";
-            contenido.textContent = valor;
-
-            if (mapaDeMinas.includes(posicion)) {
-              perder();
+            if (casilla.getAttribute("data-estado") === "interrogacion") {
+              // Si la casilla está marcada con "?", la descubrimos
+              contenido.style.visibility = "visible";
+              if (mapaDeMinas.includes(posicion)) {
+                perder(); // Si es mina, el jugador pierde
+              } else {
+                descubrirAlrededores(posicion); // Descubre las casillas vecinas
+              }
             } else {
-              descubrirAlrededores(posicion);
+              contenido.style.visibility = "visible"; // Muestra el contenido
+              contenido.textContent = valor;
+              if (mapaDeMinas.includes(posicion)) {
+                perder(); // Si es mina, el jugador pierde
+              } else {
+                descubrirAlrededores(posicion); // Descubre las casillas vecinas
+              }
             }
           }
         } else if (event.button === 2) {
@@ -182,7 +192,7 @@
           clickCount++;
           if (clickCount === 1) {
             // Marca con una interrogación
-            casilla.innerHTML = "?";
+            contenido.innerHTML = "?";
             casilla.style["background-color"] = "yellow"; // Cambiar el fondo al hacer click derecho
             casilla.setAttribute("data-estado", "interrogacion");
           } else if (clickCount === 2) {
