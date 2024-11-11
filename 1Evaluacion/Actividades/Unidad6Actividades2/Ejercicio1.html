@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Declaración del conjunto de caracteres y configuración de vista en dispositivos móviles -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Título de la página -->
     <title>Document</title>
     <script>
+      // Array con ubicaciones de librerías en Valencia
       let ubicaciones = [
         "Calle Colón, 32, 46004 Valencia",
         "Calle San Vicente Mártir, 110, 46007 Valencia",
@@ -12,16 +15,21 @@
         "Avenida Aragón, 26, 46021 Valencia",
         "Calle Ruzafa, 34, 46006 Valencia",
       ];
+      // Variable para controlar cuántas ubicaciones se muestran
       let maximo = 1;
-      function cargarCalles() {
-        let lista = "";
 
+      // Función para cargar y mostrar las ubicaciones en el formulario
+      function cargarCalles() {
+        let lista = ""; // Inicialización de lista vacía
+
+        // Recorre las ubicaciones hasta el número indicado en 'maximo'
         for (let index = 0; index < maximo; index++) {
-          lista += "<li>" + ubicaciones[index] + "</li>";
+          lista += "<li>" + ubicaciones[index] + "</li>"; // Añade cada ubicación en una lista HTML
         }
-        document.getElementById("ubicacion").innerHTML = lista;
+        document.getElementById("ubicacion").innerHTML = lista; // Inserta la lista en el elemento HTML
       }
 
+      // Array con nombres de editoriales
       let editoriales = [
         "Planeta",
         "Destino",
@@ -30,77 +38,100 @@
         "Anaya",
       ];
 
+      // Función para cargar las editoriales en el menú desplegable
       function cargarEditoriales() {
-        let lista = "";
+        let lista = ""; // Inicialización de lista vacía
+
+        // Recorre el array de editoriales y las inserta en opciones HTML
         for (let index = 0; index < editoriales.length; index++) {
-          //lista += '<option value="' + '">' + editoriales[index] + "</option>";
           lista += "<option>" + editoriales[index] + "</option>";
         }
 
+        // Inserta las opciones de editorial en el menú desplegable
         document.getElementById("editorial").innerHTML = lista;
       }
 
+      // Función que carga ubicaciones y editoriales cuando se llama
       function cargarFormulario() {
-        cargarCalles();
-        cargarEditoriales();
+        cargarCalles(); // Llama a cargar las ubicaciones
+        cargarEditoriales(); // Llama a cargar las editoriales
       }
-      //AÑADIR VALIDACION DE PRECIO, QUE SOLO ENTREN NUMEROS MAYOR Q 0
+      // Nota: Agregar validación para el precio, permitiendo solo números mayores a 0
     </script>
   </head>
   <body onload="cargarFormulario();">
+    <!-- Título principal de la página -->
     <h1>LIBRERIAS VALENCIA</h1>
     <form>
+      <!-- Campo de entrada para el título del libro -->
       <div>
         <label for="titulo">TITULO: </label>
         <input id="titulo" type="text" />
       </div>
+      <!-- Campo de entrada para el autor del libro -->
       <div>
         <label for="autor">AUTOR: </label>
         <input id="autor" type="text" />
       </div>
+      <!-- Campo de entrada para el precio del libro -->
       <div>
         <label for="precio">PRECIO: </label>
         <input id="precio" type="text" />
       </div>
+      <!-- Menú desplegable para seleccionar la editorial -->
       <div>
         <label for="editorial">EDITORIAL:</label>
         <select id="editorial"></select>
       </div>
+      <!-- Campo de entrada para agregar una nueva editorial -->
       <div>
         <button id="btnañadireditorial">AÑADIR EDITORIAL</button>
         <input id="nuevaeditorial" type="text" />
       </div>
+      <!-- Lista de ubicaciones de librerías y botones para agregar o quitar ubicaciones -->
       <div id="ubicaciones">
         <label>UBICACION:</label>
         <ul id="ubicacion"></ul>
+        <!-- Lista de ubicaciones cargada dinámicamente -->
         <button id="btnSumar">+</button>
+        <!-- Botón para aumentar ubicaciones -->
         <button id="btnRestar">-</button>
+        <!-- Botón para reducir ubicaciones -->
       </div>
+      <!-- Botón para enviar el formulario -->
       <button type="submit">Dar de alta</button>
     </form>
     <script>
+      // Selecciona el botón para aumentar ubicaciones
       let sumar = document.getElementById("btnSumar");
+      // Evento para el botón sumar, que aumenta el número de ubicaciones
       sumar.addEventListener("click", function (event) {
-        event.preventDefault(); //evita que recargue la pagina al pulsarlo
-        if (maximo < ubicaciones.length) maximo++;
-        cargarCalles();
+        event.preventDefault(); // Evita la recarga de la página al hacer clic
+        if (maximo < ubicaciones.length) maximo++; // Aumenta 'maximo' si hay ubicaciones restantes
+        cargarCalles(); // Vuelve a cargar la lista de ubicaciones
       });
 
+      // Selecciona el botón para disminuir ubicaciones
       let restar = document.getElementById("btnRestar");
+      // Evento para el botón restar, que disminuye el número de ubicaciones
       restar.addEventListener("click", function (event) {
-        event.preventDefault(); //evita que recargue la pagina al pulsarlo
-        if (maximo > 1) maximo--;
-        cargarCalles();
+        event.preventDefault(); // Evita la recarga de la página al hacer clic
+        if (maximo > 1) maximo--; // Disminuye 'maximo' si hay más de una ubicación mostrada
+        cargarCalles(); // Vuelve a cargar la lista de ubicaciones
       });
 
+      // Selecciona el botón para agregar una nueva editorial
       let añadirEditorial = document.getElementById("btnañadireditorial");
+      // Selecciona el campo de entrada para una nueva editorial
       let nuevaEditorial = document.getElementById("nuevaeditorial");
+      // Evento para el botón añadir editorial, que agrega una editorial al array
       añadirEditorial.addEventListener("click", function (event) {
-        event.preventDefault(); //evita que recargue la pagina al pulsarlo
+        event.preventDefault(); // Evita la recarga de la página al hacer clic
         if (nuevaEditorial.value.trim()) {
-          editoriales.push(nuevaEditorial.value); //lo añade al aray
-          cargarEditoriales(); // Actualizar el desplegable después de agregar la nueva editorial
-          nuevaEditorial.value = ""; // Limpiar el campo de texto
+          // Si el campo de texto no está vacío
+          editoriales.push(nuevaEditorial.value); // Añade la nueva editorial al array
+          cargarEditoriales(); // Vuelve a cargar el menú desplegable de editoriales
+          nuevaEditorial.value = ""; // Limpia el campo de entrada
         }
       });
     </script>

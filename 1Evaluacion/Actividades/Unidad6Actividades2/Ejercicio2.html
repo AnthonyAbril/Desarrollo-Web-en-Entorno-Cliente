@@ -1,94 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Configuración de la codificación de caracteres y de la vista adaptable a dispositivos móviles -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
+      /* Configura el fondo de la página */
       body {
-        background-repeat: no-repeat;
-        background-size: cover; /* Hace que la imagen cubra todo el fondo */
-        background-position: center; /* Centra la imagen */
-        margin: 0; /* Elimina los márgenes */
-        height: 100vh; /* Asegura que el fondo cubra toda la altura de la pantalla */
+        background-repeat: no-repeat; /* La imagen de fondo no se repite */
+        background-size: cover; /* La imagen cubre toda el área del fondo */
+        background-position: center; /* Centra la imagen en el fondo */
+        margin: 0; /* Elimina los márgenes de la página */
+        height: 100vh; /* La altura cubre toda la ventana del navegador */
       }
+      /* Configura los botones */
       button {
-        border: none; /* Sin borde */
+        border: none; /* Sin borde en los botones */
       }
+      /* Estilos para el botón "atras" */
       #atras {
-        float: left;
-        border-radius: 0 0 5px 0; /* Bordes redondeados */
+        float: left; /* Alinea el botón a la izquierda */
+        border-radius: 0 0 5px 0; /* Aplica bordes redondeados en esquinas inferiores y derecha */
       }
+      /* Estilos para el botón "adelante" */
       #adelante {
-        border-radius: 0 0 0 5px; /* Bordes redondeados */
-        float: right;
+        border-radius: 0 0 0 5px; /* Bordes redondeados en esquinas inferiores y izquierda */
+        float: right; /* Alinea el botón a la derecha */
       }
     </style>
   </head>
   <body id="body">
+    <!-- Descripción del funcionamiento del reproductor de imágenes en el fondo de la página -->
     <!--
     El reproductor funcionará del siguiente modo: 
-        • En la carpeta img tendremos las imágenes que vamos a reproducir asegurandonos 
-        que  todas  tienen  el  mismo  tamaño.  Se  puede  crear  un  array  para  las  imágenes  a 
-        reproducir. 
-        • Tiene  que  haber  un  boton  ,  icono  o  similar  que  permitirá  que  avancemos  a  la 
-        siguiente imagen a reproducir y otro para retroceder a la anterior. Esto se realizará 
-        de forma cíclica. 
-        • Si  no  se  pulsa  ninguna  imagen,  habrá  un  temporizador  que  cada  3  segundos  va 
-        cambiando a la siguiente imagen.
+        • Las imágenes se encuentran en la carpeta 'img' y todas tienen el mismo tamaño.
+        • Se utiliza un array para gestionar las imágenes que se van a mostrar.
+        • Hay dos botones para avanzar o retroceder entre las imágenes, y el ciclo es circular.
+        • Si no se pulsa ningún botón, un temporizador cambia la imagen automáticamente cada 3 segundos.
     -->
     <button id="atras">atras</button>
+    <!-- Botón para retroceder a la imagen anterior -->
     <button id="adelante">adelante</button>
+    <!-- Botón para avanzar a la siguiente imagen -->
     <script>
+      // Array que contiene las rutas de las imágenes a mostrar
       let imagenes = [
-        "img/prueba1.png",
-        "img/prueba2.png",
-        "img/prueba3.png",
-        "img/prueba4.png",
+        "./img/prueba1.png",
+        "./img/prueba2.png",
+        "./img/prueba3.png",
+        "./img/prueba4.png",
       ];
+      // Variable para indicar el índice de la imagen actual
       let seleccion = 0;
 
+      // Configura la imagen inicial de fondo
       imagen = document.body;
       imagen.style["background-image"] = "url(" + imagenes[0] + ")";
 
+      // Obtiene el botón "atras" y configura su evento de clic
       atras = document.getElementById("atras");
       atras.addEventListener("click", function () {
+        // Si el índice es el primero, va a la última imagen (cíclico); de lo contrario, decrementa
         if (seleccion == 0) {
           seleccion = imagenes.length - 1;
         } else {
           seleccion--;
         }
+        // Cambia la imagen de fondo según el índice actual
         imagen.style["background-image"] = "url(" + imagenes[seleccion] + ")";
-        reiniciarTemporizador();
+        reiniciarTemporizador(); // Reinicia el temporizador al hacer clic
       });
 
+      // Obtiene el botón "adelante" y configura su evento de clic
       adelante = document.getElementById("adelante");
       adelante.addEventListener("click", function () {
+        // Si es la última imagen, va a la primera; de lo contrario, incrementa
         if (seleccion == imagenes.length - 1) {
           seleccion = 0;
         } else {
           seleccion++;
         }
+        // Cambia la imagen de fondo según el índice actual
         imagen.style["background-image"] = "url(" + imagenes[seleccion] + ")";
-        reiniciarTemporizador();
+        reiniciarTemporizador(); // Reinicia el temporizador al hacer clic
       });
-      //AÑADIR Q AVANCE CADA 3 SEGUNDOS
+
+      // Variable para almacenar el identificador del temporizador
       let intervalId;
+
+      // Función para iniciar el temporizador que cambia las imágenes cada 3 segundos
       function iniciarTemporizador() {
         intervalId = setInterval(function () {
+          // Si es la última imagen, regresa a la primera; de lo contrario, incrementa
           if (seleccion == imagenes.length - 1) {
             seleccion = 0;
           } else {
             seleccion++;
           }
+          // Cambia la imagen de fondo según el índice actual
           imagen.style["background-image"] = "url(" + imagenes[seleccion] + ")";
-        }, 3000);
+        }, 3000); // Temporizador de 3000 ms (3 segundos)
       }
 
+      // Función para detener el temporizador y reiniciarlo
       function reiniciarTemporizador() {
-        clearInterval(intervalId); // Detiene el temporizador anterior
+        clearInterval(intervalId); // Detiene el temporizador activo
         iniciarTemporizador(); // Inicia un nuevo temporizador
       }
+
+      // Inicia el temporizador al cargar la página
       iniciarTemporizador();
     </script>
   </body>
