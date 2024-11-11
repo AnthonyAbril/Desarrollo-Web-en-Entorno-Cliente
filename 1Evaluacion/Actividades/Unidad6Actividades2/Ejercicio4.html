@@ -105,17 +105,38 @@
         contenido.textContent = casilla.getAttribute("value");
 
         const valor = casilla.getAttribute("value");
+        
         if (valor === "0") {
-          let alrededores = [
-            posicion - 1,
-            posicion + 1,
-            posicion - ancho,
-            posicion + ancho,
-            posicion - ancho - 1,
-            posicion - ancho + 1,
-            posicion + ancho - 1,
-            posicion + ancho + 1,
+          const bordeIzquierdo = posicion % ancho === 0;
+          const bordeDerecho = (posicion + 1) % ancho === 0
+
+          const alrededores = [
+            //verticales
+            posicion - ancho,     
+            posicion + ancho,     
+
           ];
+
+          //si esta en el borde izquierdo no debe tener laterales izquierdos
+          if(!bordeIzquierdo){
+            //laterales izquierdos
+            alrededores.push(
+              posicion - ancho - 1, 
+              posicion - 1,         
+              posicion + ancho - 1
+            );
+          }
+
+          //si esta en el borde derecho no debe tener laterales derechos
+          if(!bordeDerecho){
+            //laterales derechos
+            alrededores.push(
+              posicion + ancho + 1, 
+              posicion + 1,         
+              posicion - ancho + 1
+            );
+          }
+
           alrededores.forEach((adj) => {
             if (document.getElementById(adj)) descubrirAlrededores(adj);
           });
@@ -210,16 +231,35 @@
 
       //Devuelve cuantas minas tiene cerca en base a la posicion
       function minasCerca(posicion) {
+        const bordeIzquierdo = posicion % ancho === 0;
+        const bordeDerecho = (posicion + 1) % ancho === 0
+
         const alrededores = [
-          posicion - 1,
-          posicion + 1,
-          posicion - ancho,
-          posicion + ancho,
-          posicion - ancho - 1,
-          posicion - ancho + 1,
-          posicion + ancho - 1,
-          posicion + ancho + 1,
+          //verticales
+          posicion - ancho,     
+          posicion + ancho,     
+
         ];
+
+        //si esta en el borde izquierdo no debe tener laterales izquierdos
+        if(!bordeIzquierdo){
+          //laterales izquierdos
+          alrededores.push(
+            posicion - ancho - 1, 
+            posicion - 1,         
+            posicion + ancho - 1
+          );
+        }
+
+        //si esta en el borde derecho no debe tener laterales derechos
+        if(!bordeDerecho){
+          //laterales derechos
+          alrededores.push(
+            posicion + ancho + 1, 
+            posicion + 1,         
+            posicion - ancho + 1
+          );
+        }
         return alrededores.reduce(
           (cont, adj) => cont + mapaDeMinas.includes(adj),
           0
@@ -240,6 +280,7 @@
           tabla.appendChild(fila);
         }
         tablero.appendChild(tabla);
+        console.log(ancho,alto);
       }
 
       //crea el selector de niveles que aparece al inicio
