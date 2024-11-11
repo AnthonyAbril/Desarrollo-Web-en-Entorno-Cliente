@@ -165,6 +165,7 @@
           casilla.classList.add("mina"); //se le añade la clase mina a esa casilla
           casilla.setAttribute("value", "m"); //se le añade el atributo value que sera m
         } else {
+          casilla.classList.add("sinmina"); //se le añade la clase sinmina a esa casilla
           let valor = minasCerca(posicion); //guardamos su posicion
           casilla.setAttribute("value", valor); //se le añade el atributo value que sera posicion
         }
@@ -202,38 +203,46 @@
                 minasRestantes++; //devuelve 1 a las minas restantes
                 document.getElementById("minas").textContent =
                   "Minas restantes: " + minasRestantes; //muestra en la barra superior el nuevo valor de las minas restantes
-
-                //al llegar a 0 minas restantes
-                if (minasRestantes == 0) {
-                  //revise si las asignadas son las mismas q el de mapa de minas
-                  let minasMarcadas = [];
-                  ganar = true;
-
-                  //recorre el array de todas las minas
-                  document.querySelectorAll(".mina").forEach((element) => {
-                    //si cada una de las minas ha sido marcada con M
-                    if (element.querySelector("span").textContent === "M") {
-                      minasMarcadas.push(element); //la guardamos en el array
-                    } else {
-                      ganar = false; //sino aun no se ha ganado la partida
-                    }
-                  });
-
-                  //si ninguna ha sido erronea y se han marcado la cantidad de minas requeridas
-                  if (ganar && minasMarcadas.length === minas) {
-                    //se recorre el array de las marcadas
-                    minasMarcadas.forEach((element) => {
-                      element.style.backgroundColor = "green"; //las pinta de verde
-                    });
-                    alert("has ganado");
-                    findejuego = true; //Termina el juego
-                    clearInterval(intervalId); //detiene el temporizador
-                  }
-                }
               } else {
                 //al tercer click
                 casilla.style.backgroundColor = "grey"; //pone su fondo gris
                 contenido.textContent = ""; //limpia su contenido
+              }
+            }
+
+            //al llegar a 0 minas restantes
+            if (minasRestantes == 0) {
+              //revise si las asignadas son las mismas q el de mapa de minas
+              let minasMarcadas = [];
+              ganar = true;
+
+              //recorre el array de todas las minas
+              document.querySelectorAll(".mina").forEach((element) => {
+                //si cada una de las minas ha sido marcada con M
+                if (element.querySelector("span").textContent === "M") {
+                  minasMarcadas.push(element); //la guardamos en el array
+                } else {
+                  ganar = false; //sino aun no se ha ganado la partida
+                }
+              });
+
+              //recorre el array de todas las casillas sin minas
+              document.querySelectorAll(".sinmina").forEach((element) => {
+                //si alguna aun no ha sido descubierta
+                if (element.style.backgroundColor != "white") {
+                  ganar = false; //aun no se ha ganado la partida
+                }
+              });
+
+              //si ninguna ha sido erronea y se han marcado la cantidad de minas requeridas
+              if (ganar && minasMarcadas.length === minas) {
+                //se recorre el array de las marcadas
+                minasMarcadas.forEach((element) => {
+                  element.style.backgroundColor = "green"; //las pinta de verde
+                });
+                alert("has ganado");
+                findejuego = true; //Termina el juego
+                clearInterval(intervalId); //detiene el temporizador
               }
             }
           }
@@ -317,7 +326,7 @@
 
             //sacar info de array
             nombre = nivel[0]; //guarda el nombre del nivel escogido
-            minas = nivel[1]; //guarda la cantidad de minas del nivel escogido
+            minas = 2; //guarda la cantidad de minas del nivel escogido
             alto = Math.floor(Math.random() * (nivel[3] - nivel[2])) + nivel[2]; //guarda lo alto del tablero sacandolo aleatoriamente entre el minimo y el maximo del nivel
             ancho =
               Math.floor(Math.random() * (nivel[3] - nivel[2])) + nivel[2]; //guarda lo ancho del tablero sacandolo aleatoriamente entre el minimo y el maximo del nivel
@@ -325,7 +334,7 @@
             findejuego = false; //empieza el juego
             tiempo = 0; //pone el tiempo en 0
 
-            mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho); //guarda las posiciones de las minas
+            mapaDeMinas = generarNumerosAleatoriosUnicos(2, alto * ancho); //guarda las posiciones de las minas
             iniciarTemporizador(); //inicia el temporizador
 
             document.getElementById("nivel").textContent = "Nivel: " + nombre; //pone el nombre del nivel en la barra superior
