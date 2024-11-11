@@ -88,7 +88,7 @@
 
       //funcion que se ejecuta al perder (descubrir una mina)
       function perder() {
-        alert("Has findejuego");
+        alert("Has perdido");
         findejuego = true; //termina el juego
         clearInterval(intervalId); //detiene el temporizador
         //recorre cada casilla que sea una mina
@@ -326,7 +326,7 @@
 
             //sacar info de array
             nombre = nivel[0]; //guarda el nombre del nivel escogido
-            minas = 2; //guarda la cantidad de minas del nivel escogido
+            minas = nivel[1]; //guarda la cantidad de minas del nivel escogido
             alto = Math.floor(Math.random() * (nivel[3] - nivel[2])) + nivel[2]; //guarda lo alto del tablero sacandolo aleatoriamente entre el minimo y el maximo del nivel
             ancho =
               Math.floor(Math.random() * (nivel[3] - nivel[2])) + nivel[2]; //guarda lo ancho del tablero sacandolo aleatoriamente entre el minimo y el maximo del nivel
@@ -334,7 +334,7 @@
             findejuego = false; //empieza el juego
             tiempo = 0; //pone el tiempo en 0
 
-            mapaDeMinas = generarNumerosAleatoriosUnicos(2, alto * ancho); //guarda las posiciones de las minas
+            mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho); //guarda las posiciones de las minas
             iniciarTemporizador(); //inicia el temporizador
 
             document.getElementById("nivel").textContent = "Nivel: " + nombre; //pone el nombre del nivel en la barra superior
