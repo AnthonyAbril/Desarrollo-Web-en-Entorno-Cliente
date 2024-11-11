@@ -49,10 +49,12 @@
     </div>
 
     <script>
+      //desactivamos el menu desplegable al pulsar click derecho
       document.addEventListener("contextmenu", (event) =>
         event.preventDefault()
       );
 
+      //array de los distintos niveles con su numero de minas correspondiente y la cantidad maxima y minima de filas y columnas que puede haber
       let niveles = [
         ["Sencillo", 25, 10, 20],
         ["Normal", 60, 20, 40],
@@ -60,18 +62,23 @@
         ["Experto", 140, 80, 100],
       ];
 
+      //creamos las variables necesarias para el juego
       let nombre, minas, alto, ancho, mapaDeMinas, minasRestantes, perdido;
+      
+      //contador
       let intervalId,
         tiempo = 0;
 
+      //funcion que devuelve una cantidad indicada de numeros aleatorios distintos cada uno entre si desde el 0 hasta el maximo indicado 
       function generarNumerosAleatoriosUnicos(cantidad, maxNumero) {
-        const numeros = new Set();
+        const numeros = new Set();//crea un set
         while (numeros.size < cantidad) {
           numeros.add(Math.floor(Math.random() * maxNumero));
         }
         return Array.from(numeros);
       }
 
+      //funcion que se ejecuta al perder (descubrir una mina)
       function perder() {
         alert("Has perdido");
         perdido = true;
@@ -82,6 +89,7 @@
         });
       }
 
+      //funcion para descubrir las casillas adyacentes de una si esta vacia (0) e indicarles a estas que hagan lo mismo si son vacias tambien
       function descubrirAlrededores(posicion) {
         const casilla = document.getElementById(posicion);
         if (
@@ -113,6 +121,7 @@
         }
       }
 
+      //devuelve una casilla que compondran el tablero
       function crearCasilla(posicion) {
         const casilla = document.createElement("th");
         casilla.id = posicion;
@@ -148,6 +157,7 @@
             clickCount = (clickCount + 1) % 3;
             if (clickCount === 1) {
               casilla.style.backgroundColor = "yellow";
+              contenido.style.visibility = "visible"; 
               contenido.textContent = "?";
             } else if (clickCount === 2) {
               casilla.style.backgroundColor = "red";
@@ -155,8 +165,32 @@
               minasRestantes--;
               document.getElementById("minas").textContent =
                 "Minas restantes: " + minasRestantes;
+
+              //revise si las asignadas (guardadas en un array elegidas por su atributo) son las mismas q el de mapa de minas
               if (minasRestantes == 0) {
-                //revise si las asignadas (guardadas en un array elegidas por su atributo) son las mismas q el de mapa de minas
+                let minasMarcadas = [] //guarda la posicion de las minas marcadas al momento de llegar a 0
+                
+                ganar = true;
+
+                //recorre el array de todas las minas
+                document.querySelectorAll(".mina").forEach((element) => {
+                  //si cada una de las minas ha sido marcada con M
+                  if(element.querySelector("span").textContent = "M"){
+                    minasMarcadas.push(element);//la guardamos en un array
+                  }else{
+                    ganar=false;
+                  }
+                });
+
+                //si ninguna ha sido erronea
+                if(ganar){
+                  //se recorre el array de las marcadas
+                  minasMarcadas.forEach((element) => {
+                    element.style.backgroundColor = "green";
+                  });
+                  alert("has ganado");
+                }
+
               }
             } else {
               casilla.style.backgroundColor = "grey";
@@ -171,6 +205,7 @@
         return casilla;
       }
 
+      //Devuelve cuantas minas tiene cerca en base a la posicion
       function minasCerca(posicion) {
         const alrededores = [
           posicion - 1,
@@ -188,6 +223,7 @@
         );
       }
 
+      //crea el tablero
       function crearTablero() {
         const tablero = document.getElementById("tablero");
         tablero.innerHTML = ""; // Limpia el tablero
@@ -203,19 +239,22 @@
         tablero.appendChild(tabla);
       }
 
+      //crea el selector de niveles que aparece al inicio
       function selectorDeNivel() {
         const cuadro = document.getElementById("cuadro");
         cuadro.style.visibility = "visible";
         document.getElementById("barraSuperior").style.visibility = "hidden";
 
+        //creador de selector de nivel
         niveles.forEach((nivel) => {
-          const boton = document.createElement("button");
-          boton.textContent = nivel[0];
+          const boton = document.createElement("button");//creamos un boton para ese nivel
+          boton.textContent = nivel[0]; //ponemos el nombre del nivel en el boton
           boton.addEventListener("click", () => {
             cuadro.style.visibility = "hidden";
             document.getElementById("barraSuperior").style.visibility =
               "visible";
 
+            //sacar info de array
             nombre = nivel[0];
             minas = nivel[1];
             alto = Math.floor(Math.random() * (nivel[3] - nivel[2])) + nivel[2];
@@ -225,7 +264,7 @@
             perdido = false;
             tiempo = 0;
 
-            mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho);
+            mapaDeMinas = generarNumerosAleatoriosUnicos(minas, alto * ancho);//Las posiciones de las minas
             iniciarTemporizador();
 
             document.getElementById("nivel").textContent = "Nivel: " + nombre;
@@ -233,11 +272,26 @@
               "Minas: " + minasRestantes;
             crearTablero();
           });
-          cuadro.appendChild(boton);
-          cuadro.appendChild(document.createElement("br"));
+
+          texto = document.createElement("p"); //creamos el texto de detalles del nivel
+          lista =
+            " entre " +
+            nivel[2] +
+            " y " +
+            nivel[3] +
+            " columnas y filas de manera aleatoria. " +
+            nivel[1] +
+            " minas.";
+          texto.innerHTML = lista;
+
+            
+          cuadro.appendChild(boton); //se añade el boton al cuadro
+          cuadro.appendChild(texto); //se añade el texto al cuadro
+          cuadro.appendChild(document.createElement("br")); //salto de linea
         });
       }
 
+      //inicia el temporizador y lo va indicando en la barra superior
       function iniciarTemporizador() {
         if (intervalId) clearInterval(intervalId);
         intervalId = setInterval(() => {
