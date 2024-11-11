@@ -72,44 +72,45 @@
       //funcion que devuelve una cantidad indicada de numeros aleatorios distintos cada uno entre si desde el 0 hasta el maximo indicado 
       function generarNumerosAleatoriosUnicos(cantidad, maxNumero) {
         const numeros = new Set();//crea un set
+        //hasta que tenga la cantidad de numeros requerida
         while (numeros.size < cantidad) {
-          numeros.add(Math.floor(Math.random() * maxNumero));
+          numeros.add(Math.floor(Math.random() * maxNumero));//añade numeros aleatorios (al ser set solo añadira los que no tenga)
         }
-        return Array.from(numeros);
+        return Array.from(numeros);//lo convierte a array y lo devuelve
       }
 
       //funcion que se ejecuta al perder (descubrir una mina)
       function perder() {
         alert("Has findejuego");
-        findejuego = true;
-        clearInterval(intervalId);
+        findejuego = true;  //termina el juego
+        clearInterval(intervalId);  //detiene el temporizador
+        //recorre cada casilla que sea una mina
         document.querySelectorAll(".mina").forEach((element) => {
-          element.style.backgroundColor = "red";
-          element.querySelector("span").style.visibility = "visible"
-          element.querySelector("span").innerText = element.getAttribute("value");
+          element.style.backgroundColor = "red";//le pone el fondo rojo
+          element.querySelector("span").style.visibility = "visible"//hace su contenido visible
+          element.querySelector("span").innerText = element.getAttribute("value");//introduce en su contenido su valor (que sera m al ser una mina)
         });
       }
 
       //funcion para descubrir las casillas adyacentes de una si esta vacia (0) e indicarles a estas que hagan lo mismo si son vacias tambien
       function descubrirAlrededores(posicion) {
-        const casilla = document.getElementById(posicion);
-        if (
-          casilla.style.backgroundColor === "white" ||
-          casilla.classList.contains("mina")
-        )
-          return;
+        const casilla = document.getElementById(posicion);//encontramos la casilla por su posicion y la guardamos
+        if (casilla.style.backgroundColor === "white" || casilla.classList.contains("mina")) return; //si es una mina o ya ha sido descubierta termina la funcion sin hace nada
 
-        casilla.style.backgroundColor = "white";
-        const contenido = casilla.querySelector("span");
-        contenido.style.visibility = "visible";
-        contenido.textContent = casilla.getAttribute("value");
+        //descubre la casilla
+        casilla.style.backgroundColor = "white";//añade el color de fondo blanco
+        const contenido = casilla.querySelector("span");//añade un span de contenido
+        contenido.style.visibility = "visible";//hace visible la casilla
+        contenido.textContent = casilla.getAttribute("value");//introduce en su contenido (span) su valor
 
-        const valor = casilla.getAttribute("value");
+        const valor = casilla.getAttribute("value");//guarda su valor
         
+        //si el valor es 0 (no tiene minas alredeedor)
         if (valor === "0") {
-          const bordeIzquierdo = posicion % ancho === 0;
-          const bordeDerecho = (posicion + 1) % ancho === 0
+          const bordeIzquierdo = posicion % ancho === 0;//guarda si esta en el borde izquierdo
+          const bordeDerecho = (posicion + 1) % ancho === 0//guarda si esta en el borde derecho
 
+          //guardamos sus casillas adyacentes
           const alrededores = [
             //verticales
             posicion - ancho,     
@@ -137,41 +138,46 @@
             );
           }
 
+          //recorre las casillas que tenga alrededor
           alrededores.forEach((adj) => {
-            if (document.getElementById(adj)) descubrirAlrededores(adj);
+            if (document.getElementById(adj)) descubrirAlrededores(adj);//si la encuentra le ejecuta esta misma funcion a esa casilla
           });
         }
       }
 
       //devuelve una casilla que compondran el tablero
       function crearCasilla(posicion) {
-        const casilla = document.createElement("th");
-        casilla.id = posicion;
-        const contenido = document.createElement("span");
-        contenido.style.visibility = "hidden";
-        casilla.appendChild(contenido);
+        const casilla = document.createElement("th");//creamos una casilla
+        casilla.id = posicion;//le ponemos su posicion como atributo id
+        const contenido = document.createElement("span");//creamos su contenido (span)
+        contenido.style.visibility = "hidden";//su contenido estara escondido
+        casilla.appendChild(contenido);//metemos el contenido en la casilla
 
+        //si la posicion esta incluida en el mapa de minas
         if (mapaDeMinas.includes(posicion)) {
-          casilla.classList.add("mina");
-          casilla.setAttribute("value", "m");
+          casilla.classList.add("mina");//se le añade la clase mina a esa casilla
+          casilla.setAttribute("value", "m");//se le añade el atributo value que sera m
         } else {
-          let valor = minasCerca(posicion);
-          casilla.setAttribute("value", valor);
+          let valor = minasCerca(posicion);//guardamos su posicion
+          casilla.setAttribute("value", valor);//se le añade el atributo value que sera posicion
         }
 
-        let clickCount = 0;
-        casilla.addEventListener("mousedown", (event) => {
-          if (findejuego) return;
+        let clickCount = 0;//inicia el contador de clicks a 0
 
-          // Click izquierdo
+        //si el mouse pulsa un boton
+        casilla.addEventListener("mousedown", (event) => {
+          if (findejuego) return;//si el juego ha terminado no hara nada
+
+          //Si pulsa el Click izquierdo y la casilla aun no ha sido descubierta
           if (event.button === 0 && casilla.style.backgroundColor !== "white") {
+            //si la casilla esta en la clase mina
             if (casilla.classList.contains("mina")) {
-              perder();
+              perder();//se pierde el juego
             } else {
-              descubrirAlrededores(posicion);
+              descubrirAlrededores(posicion);//descubre los alrededores de la casilla
             }
           }
-          // Click derecho para marcar o desmarcar
+          //si pulsa el Click derecho para marcar o desmarcar
           else if (
             event.button === 2 &&
             casilla.style.backgroundColor !== "white"
@@ -231,9 +237,10 @@
 
       //Devuelve cuantas minas tiene cerca en base a la posicion
       function minasCerca(posicion) {
-        const bordeIzquierdo = posicion % ancho === 0;
-        const bordeDerecho = (posicion + 1) % ancho === 0
+        const bordeIzquierdo = posicion % ancho === 0;//guarda si esta en el borde izquierdo
+        const bordeDerecho = (posicion + 1) % ancho === 0//guarda si esta en el borde derecho
 
+        //guardamos sus casillas adyacentes
         const alrededores = [
           //verticales
           posicion - ancho,     
