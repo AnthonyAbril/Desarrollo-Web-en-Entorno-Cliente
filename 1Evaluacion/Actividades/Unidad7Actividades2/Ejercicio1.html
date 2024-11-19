@@ -65,6 +65,11 @@
                 // Convertir la respuesta JSON en un objeto de JavaScript
                 let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
                 console.log("Empleados:", datos);
+
+                for (var i = 0; i < datos.length; i++){
+                    var nombreEmpleado = datos[i].nombre;
+                    document.getElementById("caja").innerHTML += nombreEmpleado + "<br>";
+                }
             }
         }
 
@@ -75,6 +80,41 @@
         peticion.send();
 
 
+    </script>
+    <h1>Gestión de Empleados</h1>
+    <div id="caja">
+        <form id="formEmpleado">
+            <input type="text" id="nombre" placeholder="Nombre" required />
+            <input type="text" id="puesto" placeholder="Puesto" />
+            <input type="number" id="salario" placeholder="Salario" />
+            <input type="date" id="fecha_ingreso" placeholder="Fecha de ingreso" />
+            <button type="submit">Guardar</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Puesto</th>
+                    <th>Salario</th>
+                    <th>Fecha de Ingreso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="listaEmpleados"></tbody>
+        </table>
+    </div>
+    <script>
+        function crearNuevoEmpleado(formulario){
+            const dataToSend = { 
+                nombre: formulario.nombre.value, 
+                edad: formulario.edad.value, 
+                cargo: formulario.cargo.value, 
+                contratado: formulario.contratado.checked ? 1 : 0 
+            }; 
+            // Convertir a JSON 
+            const jsonData = JSON.stringify(dataToSend); 
+        }
     </script>
 </body>
 </html>
