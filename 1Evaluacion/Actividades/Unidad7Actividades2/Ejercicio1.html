@@ -6,6 +6,74 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <!--
+        PODMAN
+        podman run -it -p 8080:80 --name servidor-php -v ./:/var/www/html docker.io/tarrega/lamp:1.0
+        service apache2 start
+
+        Crear una aplicación CRUD que permita listar, insertar, modificar y borrar empleados de una 
+        base de datos remota utilizando una API RESTFUL y con formato de intercambio de datos 
+        JSON. La API tiene que recibir todas las peticiones en AJAX. Los “endpoint” de la API son:
+
+        "GET", http://test-api.jtarrega.es/api/empleados 
+            Devuelve un array, en que cada elemento es un JSON con los datos de un empleado: 
+            
+        "GET", http://test-api.jtarrega.es/api/empleados/{idempleado} 
+            Devuelve  un  array,  con  un  solo  elemento  que  es  un  JSON  con  los  datos  del  empleado 
+            solicitado en “idempleado”: 
+
+        Estos dos primeros “endpoint” devuelven 200 en status si todo ha ido bien. 
+
+        "POST", http://test-api.jtarrega.es/api/empleados 
+            Permite introducir un nuevo empleado en la BBDD, no se le enviará el id porque lo genera 
+            automáticamente, podemos utilizar para ello: 
+            // Objeto JavaScript 
+                const dataToSend = { 
+                    nombre: formulario.nombre.value, 
+                    edad: formulario.edad.value, 
+                    cargo: formulario.cargo.value, 
+                    contratado: formulario.contratado.checked ? 1 : 0 
+                }; 
+                // Convertir a JSON 
+                const jsonData = JSON.stringify(dataToSend); 
+            Si todo va bien devuelve 200 o 201 en status y se habrá insertado el nuevo registro. 
+        
+        "PUT", http://test-api.jtarrega.es/api/empleados/{idempleado} 
+            Permite modificar el registro en la BBDD con id=idempleado con los datos que le pasemos 
+            en el JSON (podemos usar el mismo objeto que el visto en el anterior) 
+            Si todo va bien devuelve 200 o 201 en status y se habrá modificado el registro con los 
+            datos proporcionados 
+        
+        "DELETE", http://test-api.jtarrega.es/api/empleados/{idempleado} 
+            Permite borrar el registro en la BBDD con id=idempleado. No necesitamos pasarle datos 
+            en JSON. Funciona como el GET que obtenía un elemento. 
+            Si todo va bien devuelve 200, 201 o 204 en status y se habrá eliminado el registro con el id 
+            proporcinado. 
+    -->
+
+    <script>
+        peticion = new XMLHttpRequest();
+
+        //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
+        peticion.onreadystatechange = function () {
+            //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
+            if (peticion.readyState == 4 && peticion.status == 200) {
+                let respuesta = peticion.responseText; // Contiene la respuesta como texto.
+                console.log("Datos recibidos:", respuesta);
+
+                // Convertir la respuesta JSON en un objeto de JavaScript
+                let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
+                console.log("Empleados:", datos);
+            }
+        }
+
+        //se abre y configura la peticion 
+        peticion.open('GET', 'http://test-api.jtarrega.es/api/empleados', true);
+
+        //se encia la peticion
+        peticion.send();
+
+
+    </script>
 </body>
 </html>
