@@ -8,7 +8,8 @@
 <body>
     <!--
         PODMAN
-        podman run -it -p 8080:80 --name servidor-php -v ./:/var/www/html docker.io/tarrega/lamp:1.0
+        podman rm servidor-php
+        podman run -it -p 8080:80 --name servidor-php -v ./:/var/www/html docker.io/jtarrega/lamp:1.0
         service apache2 start
 
         Crear una aplicación CRUD que permita listar, insertar, modificar y borrar empleados de una 
