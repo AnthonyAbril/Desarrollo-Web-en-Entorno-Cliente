@@ -55,6 +55,12 @@
     <script>
         peticion = new XMLHttpRequest();
 
+        function formularioCrearEmpleado(){
+            formulario = document.createElement("form");
+
+            body.appendChild(formulario);
+        }
+
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
         peticion.onreadystatechange = function () {
             //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
@@ -71,6 +77,15 @@
                     var empleado = datos[i];
 
                     listarEmpleado(empleado);
+
+                    crearNuevoEmpleado = document.createElement("button");
+                    crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
+                    crearNuevoEmpleado.addEventListener("click") = function(){
+                        
+
+                        
+                    };
+                    document.getElementById("listaEmpleados").appendChild();
                 }
             }
         }
@@ -148,17 +163,6 @@
             filaEmpleado.appendChild(celda);
 
             lista.appendChild(filaEmpleado);
-        }
-
-        function crearNuevoEmpleado(formulario){
-            const dataToSend = { 
-                nombre: formulario.nombre.value, 
-                edad: formulario.edad.value, 
-                cargo: formulario.cargo.value, 
-                contratado: formulario.contratado.checked ? 1 : 0 
-            }; 
-            // Convertir a JSON 
-            const jsonData = JSON.stringify(dataToSend); 
         }
     </script>
 </body>
