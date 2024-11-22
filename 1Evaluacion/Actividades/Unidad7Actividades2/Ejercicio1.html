@@ -66,9 +66,11 @@
                 let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
                 console.log("Empleados:", datos);
 
+                //por cada empleado
                 for (var i = 0; i < datos.length; i++){
-                    var nombreEmpleado = datos[i].nombre;
-                    document.getElementById("caja").innerHTML += nombreEmpleado + "<br>";
+                    var empleado = datos[i];
+
+                    listarEmpleado(empleado);
                 }
             }
         }
@@ -95,9 +97,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Puesto</th>
-                    <th>Salario</th>
-                    <th>Fecha de Ingreso</th>
+                    <th>Edad</th>
+                    <th>Cargo</th>
+                    <th>Contratado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -105,6 +107,49 @@
         </table>
     </div>
     <script>
+        function listarEmpleado(empleado){
+
+            var idEmpleado = empleado.id;
+            var nombreEmpleado = empleado.nombre;
+            var cargoEmpleado = empleado.cargo;
+            var edadEmpleado = empleado.edad;
+            var contratadoEmpleado = empleado.contratado;
+
+            lista = document.getElementById("listaEmpleados");
+            
+            //fila por cada empleado
+            filaEmpleado = document.createElement("tr");
+
+            atributos = 0;
+            //celda por cada atributo
+            for (let clave in empleado) {
+
+                if(atributos<5){
+                    //celda por cada atributo
+                    celda = document.createElement("th");
+
+                    //introduce info
+                    celda.innerText = empleado[clave];
+                    atributos++;
+
+                    //se añade al documento
+                    filaEmpleado.appendChild(celda);
+                }
+            }
+
+            //añadimos los botones
+            celda = document.createElement("th");
+            modificar = document.createElement("button");
+            modificar.innerText = "modificar";
+            borrar = document.createElement("button");
+            borrar.innerText = "borrar";
+            celda.appendChild(modificar);
+            celda.appendChild(borrar);
+            filaEmpleado.appendChild(celda);
+
+            lista.appendChild(filaEmpleado);
+        }
+
         function crearNuevoEmpleado(formulario){
             const dataToSend = { 
                 nombre: formulario.nombre.value, 
