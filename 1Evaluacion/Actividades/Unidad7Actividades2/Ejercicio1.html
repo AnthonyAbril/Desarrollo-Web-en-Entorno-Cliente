@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <!--
         PODMAN
         podman rm servidor-php
@@ -53,117 +53,114 @@
     -->
 
     <script>
-        peticion = new XMLHttpRequest();
+      peticion = new XMLHttpRequest();
 
-        function formularioCrearEmpleado(){
-            formulario = document.createElement("form");
+      function formularioCrearEmpleado() {
+        formulario = document.createElement("div");
 
-            body.appendChild(formulario);
+        formulario.innerHTML = "<form>holamundo</form>";
+
+        document.body.appendChild(formulario);
+      }
+
+      //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
+      peticion.onreadystatechange = function () {
+        //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
+        if (peticion.readyState == 4 && peticion.status == 200) {
+          let respuesta = peticion.responseText; // Contiene la respuesta como texto.
+          console.log("Datos recibidos:", respuesta);
+
+          // Convertir la respuesta JSON en un objeto de JavaScript
+          let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
+          console.log("Empleados:", datos);
+
+          //por cada empleado
+          for (var i = 0; i < datos.length; i++) {
+            var empleado = datos[i];
+
+            listarEmpleado(empleado);
+          }
+
+          crearNuevoEmpleado = document.createElement("button");
+          crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
+          crearNuevoEmpleado.addEventListener("click", () => {
+            console.log("abrir menu de creacion de empleado");
+            formularioCrearEmpleado();
+          });
+          document.body.appendChild(crearNuevoEmpleado);
         }
+      };
 
-        //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
-        peticion.onreadystatechange = function () {
-            //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
-            if (peticion.readyState == 4 && peticion.status == 200) {
-                let respuesta = peticion.responseText; // Contiene la respuesta como texto.
-                console.log("Datos recibidos:", respuesta);
+      //se abre y configura la peticion
+      peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
 
-                // Convertir la respuesta JSON en un objeto de JavaScript
-                let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
-                console.log("Empleados:", datos);
-
-                //por cada empleado
-                for (var i = 0; i < datos.length; i++){
-                    var empleado = datos[i];
-
-                    listarEmpleado(empleado);
-
-                    crearNuevoEmpleado = document.createElement("button");
-                    crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
-                    crearNuevoEmpleado.addEventListener("click") = function(){
-                        
-
-                        
-                    };
-                    document.getElementById("listaEmpleados").appendChild();
-                }
-            }
-        }
-
-        //se abre y configura la peticion 
-        peticion.open('GET', 'http://test-api.jtarrega.es/api/empleados', true);
-
-        //se encia la peticion
-        peticion.send();
-
-
+      //se encia la peticion
+      peticion.send();
     </script>
     <h1>Gestión de Empleados</h1>
     <div id="caja">
-        <form id="formEmpleado">
-            <input type="text" id="nombre" placeholder="Nombre" required />
-            <input type="text" id="puesto" placeholder="Puesto" />
-            <input type="number" id="salario" placeholder="Salario" />
-            <input type="date" id="fecha_ingreso" placeholder="Fecha de ingreso" />
-            <button type="submit">Guardar</button>
-        </form>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Edad</th>
-                    <th>Cargo</th>
-                    <th>Contratado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="listaEmpleados"></tbody>
-        </table>
+      <form id="formEmpleado">
+        <input type="text" id="nombre" placeholder="Nombre" required />
+        <input type="text" id="puesto" placeholder="Puesto" />
+        <input type="number" id="salario" placeholder="Salario" />
+        <input type="date" id="fecha_ingreso" placeholder="Fecha de ingreso" />
+        <button type="submit">Guardar</button>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>Cargo</th>
+            <th>Contratado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="listaEmpleados"></tbody>
+      </table>
     </div>
     <script>
-        function listarEmpleado(empleado){
+      function listarEmpleado(empleado) {
+        var idEmpleado = empleado.id;
+        var nombreEmpleado = empleado.nombre;
+        var cargoEmpleado = empleado.cargo;
+        var edadEmpleado = empleado.edad;
+        var contratadoEmpleado = empleado.contratado;
 
-            var idEmpleado = empleado.id;
-            var nombreEmpleado = empleado.nombre;
-            var cargoEmpleado = empleado.cargo;
-            var edadEmpleado = empleado.edad;
-            var contratadoEmpleado = empleado.contratado;
+        lista = document.getElementById("listaEmpleados");
 
-            lista = document.getElementById("listaEmpleados");
-            
-            //fila por cada empleado
-            filaEmpleado = document.createElement("tr");
+        //fila por cada empleado
+        filaEmpleado = document.createElement("tr");
 
-            atributos = 0;
+        atributos = 0;
+        //celda por cada atributo
+        for (let clave in empleado) {
+          if (atributos < 5) {
             //celda por cada atributo
-            for (let clave in empleado) {
-
-                if(atributos<5){
-                    //celda por cada atributo
-                    celda = document.createElement("th");
-
-                    //introduce info
-                    celda.innerText = empleado[clave];
-                    atributos++;
-
-                    //se añade al documento
-                    filaEmpleado.appendChild(celda);
-                }
-            }
-
-            //añadimos los botones
             celda = document.createElement("th");
-            modificar = document.createElement("button");
-            modificar.innerText = "modificar";
-            borrar = document.createElement("button");
-            borrar.innerText = "borrar";
-            celda.appendChild(modificar);
-            celda.appendChild(borrar);
-            filaEmpleado.appendChild(celda);
 
-            lista.appendChild(filaEmpleado);
+            //introduce info
+            celda.innerText = empleado[clave];
+            atributos++;
+
+            //se añade al documento
+            filaEmpleado.appendChild(celda);
+          }
         }
+
+        //añadimos los botones
+        celda = document.createElement("th");
+        modificar = document.createElement("button");
+        modificar.innerText = "modificar";
+        borrar = document.createElement("button");
+        borrar.innerText = "borrar";
+        celda.appendChild(modificar);
+        celda.appendChild(borrar);
+        filaEmpleado.appendChild(celda);
+
+        lista.appendChild(filaEmpleado);
+      }
     </script>
-</body>
+  </body>
 </html>
