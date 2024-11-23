@@ -4,6 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      #creadorDeEmpleado {
+        visibility: hidden;
+        background-color: red;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        padding: 10px;
+        border-radius: 10px;
+      }
+    </style>
   </head>
   <body>
     <!--
@@ -55,12 +68,9 @@
     <script>
       peticion = new XMLHttpRequest();
 
-      function formularioCrearEmpleado() {
-        formulario = document.createElement("div");
-
-        formulario.innerHTML = "<form>holamundo</form>";
-
-        document.body.appendChild(formulario);
+      function crearEmpleado() {
+        formulario = document.getElementById("creadorDeEmpleado");
+        formulario.style.visibility = "visible";
       }
 
       //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
@@ -85,7 +95,7 @@
           crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
           crearNuevoEmpleado.addEventListener("click", () => {
             console.log("abrir menu de creacion de empleado");
-            formularioCrearEmpleado();
+            crearEmpleado();
           });
           document.body.appendChild(crearNuevoEmpleado);
         }
@@ -119,6 +129,32 @@
         </thead>
         <tbody id="listaEmpleados"></tbody>
       </table>
+    </div>
+    <div id="creadorDeEmpleado">
+      <form>
+        <h1>Nuevo Empleado</h1>
+        <fieldset>
+          <legend>Introduce datos</legend>
+          <label for="nombre">Nombre: </label>
+          <input type="text" id="nombre" />
+          <br />
+          <label for="edad">Edad: </label>
+          <input type="number" id="edad" />
+          <br />
+          <label for="cargo">Cargo: </label>
+          <input type="text" id="cargo" />
+          <br />
+          <label for="contratado">Empleado contratado: </label>
+          <input type="checkbox" id="contratado" />
+          <br />
+          <input type="submit" value="Aceptar" onclick="crearEmpleado()" />
+          <input
+            type="submit"
+            value="Borrar"
+            onclick="document.getElementById('creadorDeEmpleado').visibility = 'hidden';"
+          />
+        </fieldset>
+      </form>
     </div>
     <script>
       function listarEmpleado(empleado) {
