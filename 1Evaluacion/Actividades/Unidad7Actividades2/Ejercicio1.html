@@ -64,58 +64,8 @@
             Si todo va bien devuelve 200, 201 o 204 en status y se habrá eliminado el registro con el id 
             proporcinado. 
     -->
-
-    <script>
-      peticion = new XMLHttpRequest();
-
-      function crearEmpleado() {
-        formulario = document.getElementById("creadorDeEmpleado");
-        formulario.style.visibility = "visible";
-      }
-
-      //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
-      peticion.onreadystatechange = function () {
-        //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
-        if (peticion.readyState == 4 && peticion.status == 200) {
-          let respuesta = peticion.responseText; // Contiene la respuesta como texto.
-          console.log("Datos recibidos:", respuesta);
-
-          // Convertir la respuesta JSON en un objeto de JavaScript
-          let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
-          console.log("Empleados:", datos);
-
-          //por cada empleado
-          for (var i = 0; i < datos.length; i++) {
-            var empleado = datos[i];
-
-            listarEmpleado(empleado);
-          }
-
-          crearNuevoEmpleado = document.createElement("button");
-          crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
-          crearNuevoEmpleado.addEventListener("click", () => {
-            console.log("abrir menu de creacion de empleado");
-            crearEmpleado();
-          });
-          document.body.appendChild(crearNuevoEmpleado);
-        }
-      };
-
-      //se abre y configura la peticion
-      peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
-
-      //se encia la peticion
-      peticion.send();
-    </script>
     <h1>Gestión de Empleados</h1>
     <div id="caja">
-      <form id="formEmpleado">
-        <input type="text" id="nombre" placeholder="Nombre" required />
-        <input type="text" id="puesto" placeholder="Puesto" />
-        <input type="number" id="salario" placeholder="Salario" />
-        <input type="date" id="fecha_ingreso" placeholder="Fecha de ingreso" />
-        <button type="submit">Guardar</button>
-      </form>
       <table>
         <thead>
           <tr>
@@ -157,6 +107,98 @@
       </form>
     </div>
     <script>
+      peticion = new XMLHttpRequest();
+
+      //abre el creador de empleados
+      function creadorEmpleado() {
+        formulario = document.getElementById("creadorDeEmpleado");
+        formulario.style.visibility = "visible";
+        formulario = formulario.firstChild;
+
+        // Escucha el evento submit
+        formulario.addEventListener("submit", function (evento) {
+          // Evitar que se envíe el formulario y recargue la página
+          evento.preventDefault();
+
+          /*
+          const datosFormulario = new FormData(formulario);
+          // Convertir FormData a JSON
+          const datosJSON = Object.fromEntries(datosFormulario.entries());
+        */
+          const dataToSend = {
+            nombre: formulario.nombre.value,
+            edad: formulario.edad.value,
+            cargo: formulario.cargo.value,
+            contratado: formulario.contratado.checked ? 1 : 0,
+          };
+          // Convertir a JSON
+          const jsonData = JSON.stringify(dataToSend);
+
+          // Enviar los datos al servidor
+          // Configurar la solicitud: método y URL
+          peticion.open(
+            "POST",
+            "http://test-api.jtarrega.es/api/empleados",
+            true
+          );
+
+          // Establecer el encabezado si envías JSON
+          peticion.setRequestHeader("Content-Type", "application/json");
+
+          // Manejar la respuesta del servidor
+          peticion.onload = function () {
+            if (peticion.status === 200) {
+              // Analiza la respuesta si es JSON
+              const respuesta = JSON.parse(peticion.responseText);
+              console.log("Respuesta del servidor:", respuesta);
+            } else {
+              console.error("Error en la solicitud:", peticion.statusText);
+            }
+          };
+
+          // Manejar errores
+          peticion.onerror = function () {
+            console.error("Error de conexión o de red.");
+          };
+
+          // Enviar la solicitud con los datos
+          peticion.send(JSON.stringify(datosJSON));
+        });
+      }
+
+      //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
+      peticion.onreadystatechange = function () {
+        //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
+        if (peticion.readyState == 4 && peticion.status == 200) {
+          let respuesta = peticion.responseText; // Contiene la respuesta como texto.
+          console.log("Datos recibidos:", respuesta);
+
+          // Convertir la respuesta JSON en un objeto de JavaScript
+          let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
+          console.log("Empleados:", datos);
+
+          //por cada empleado
+          for (var i = 0; i < datos.length; i++) {
+            var empleado = datos[i];
+
+            listarEmpleado(empleado);
+          }
+
+          crearNuevoEmpleado = document.createElement("button");
+          crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
+          crearNuevoEmpleado.addEventListener("click", () => {
+            creadorEmpleado();
+          });
+          document.body.appendChild(crearNuevoEmpleado);
+        }
+      };
+
+      //se abre y configura la peticion
+      peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
+
+      //se encia la peticion
+      peticion.send();
+
       function listarEmpleado(empleado) {
         var idEmpleado = empleado.id;
         var nombreEmpleado = empleado.nombre;
