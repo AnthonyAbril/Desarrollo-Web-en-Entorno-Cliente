@@ -39,6 +39,7 @@
       </table>
       <button onclick="creadorEmpleado()">CREAR NUEVO EMPLEADO</button>
     </div>
+    
     <div id="creadorDeEmpleado">
       <form>
         <h1>Nuevo Empleado</h1>
@@ -145,13 +146,15 @@
       }
 
       function modificarEmpelado(id) {
-        //abrir menu de modificacion
-        formularioEditor.style.display = "block"; // Elimina del diseño
 
+        //abrir menu de modificacion
+        formularioEditor.style.display = "block"; // Lo restaura
+
+        console.log("a"+id);
         let form = formularioEditor.querySelector("form");
 
         form.querySelector("h1").innerText = "modificar empleado (" + id + ")";
-
+        console.log(form);
         // Escucha el evento submit
         form.addEventListener("submit", function (evento) {
           // Evitar que se envíe el formularioCreador y recargue la página
@@ -200,8 +203,6 @@
           // Ocultar el formularioEditor después de enviar
           formularioEditor.style.display = "none"; // Elimina del diseño
         });
-
-        formularioEditor.style.display = "none"; // Elimina del diseño
       }
 
       function borrarEmpleado(id) {
