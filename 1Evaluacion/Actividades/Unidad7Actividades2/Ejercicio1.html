@@ -6,7 +6,6 @@
     <title>Document</title>
     <style>
       #creadorDeEmpleado {
-        visibility: hidden;
         background-color: red;
         position: absolute;
         top: 50%;
@@ -63,10 +62,11 @@
     </div>
 
     <script>
+      const formulario = document.getElementById("creadorDeEmpleado");
       //abre el creador de empleados
       function creadorEmpleado() {
-        const formulario = document.getElementById("creadorDeEmpleado");
-        formulario.style.visibility = "visible";
+        formulario.style.display = "block"; // Lo restaura
+
         const form = document.getElementById("formEmpleado");
 
         // Escucha el evento submit
@@ -99,28 +99,23 @@
             );
             peticion.setRequestHeader("Content-Type", "application/json");
 
+            peticion.send(jsonData);
+
             peticion.onload = function () {
               if (peticion.status === 200 || peticion.status === 201) {
                 console.log("Empleado añadido:", peticion.responseText);
-                // Aquí puedes hacer algo con la respuesta, como actualizar la lista de empleados.
-
-                let respuesta = peticion.responseText; // Contiene la respuesta como texto.
-                crearListaEmpleados(respuesta);
+                //refrescamos lista
+                IniciarTablero();
               } else {
                 console.error("Error en la solicitud:", peticion.statusText);
               }
             };
 
-            peticion.send(jsonData);
-
             form.reset();
           }
 
           // Ocultar el formulario después de enviar
-          formulario.style.visibility = "hidden";
-
-          //refrescamos lista
-          IniciarTablero();
+          formulario.style.display = "none"; // Elimina del diseño
         });
       }
 
@@ -209,6 +204,7 @@
 
       function IniciarTablero() {
         document.getElementById("listaEmpleados").innerHTML = "";
+        console.log(document.getElementById("listaEmpleados"));
 
         let peticion = new XMLHttpRequest();
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
@@ -224,6 +220,8 @@
         peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
         peticion.send();
       }
+
+      formulario.style.display = "none"; // Elimina del diseño
     </script>
   </body>
 </html>
