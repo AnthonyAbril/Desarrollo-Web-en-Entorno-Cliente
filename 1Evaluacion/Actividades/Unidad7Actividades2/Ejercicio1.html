@@ -88,30 +88,29 @@
             //pasamos los datos a json
             const jsonData = JSON.stringify(datosEmpleado);
 
+            let peticion = new XMLHttpRequest();
+
+            // Aquí puedes enviar los datos al servidor
+            peticion.open(
+              "POST",
+              "http://test-api.jtarrega.es/api/empleados",
+              true
+            );
+            peticion.setRequestHeader("Content-Type", "application/json");
+
+            peticion.onload = function () {
+              if (peticion.status === 200) {
+                console.log("Empleado añadido:", peticion.responseText);
+                // Aquí puedes hacer algo con la respuesta, como actualizar la lista de empleados.
+              } else {
+                console.error("Error en la solicitud:", peticion.statusText);
+              }
+            };
+
+            peticion.send(jsonData);
+
             form.reset();
           }
-
-          /*
-          // Aquí puedes enviar los datos al servidor
-          peticion.open(
-            "POST",
-            "http://test-api.jtarrega.es/api/empleados",
-            true
-          );
-          peticion.setRequestHeader("Content-Type", "application/json");
-
-          peticion.onload = function () {
-            if (peticion.status === 200) {
-              console.log("Empleado añadido:", peticion.responseText);
-              // Aquí puedes hacer algo con la respuesta, como actualizar la lista de empleados.
-            } else {
-              console.error("Error en la solicitud:", peticion.statusText);
-            }
-          };
-
-          peticion.send(jsonData);
-
-          */
 
           // Ocultar el formulario después de enviar
           formulario.style.visibility = "hidden";
@@ -119,7 +118,7 @@
       }
 
       function IniciarTablero() {
-        peticion = new XMLHttpRequest();
+        let peticion = new XMLHttpRequest();
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
         peticion.onreadystatechange = function () {
           //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
