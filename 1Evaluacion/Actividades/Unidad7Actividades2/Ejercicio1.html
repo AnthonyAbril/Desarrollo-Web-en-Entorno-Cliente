@@ -231,6 +231,8 @@
             };
             //enviamos la peticion
             peticion.send();
+        }else{
+            alert("Solo queda uno");
         }
       }
 
@@ -307,7 +309,7 @@
 
         //crea la peticion
         let peticion = new XMLHttpRequest();
-        
+
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
         peticion.onreadystatechange = function () {
             //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
