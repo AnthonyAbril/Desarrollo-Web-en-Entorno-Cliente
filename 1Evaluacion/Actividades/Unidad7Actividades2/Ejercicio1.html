@@ -89,6 +89,7 @@
     <script>
       const formularioCreador = document.getElementById("creadorDeEmpleado");
       const formularioEditor = document.getElementById("EditorDeEmpleado");
+        var cantidad = 0;
 
       //abre el creador de empleados
       function creadorEmpleado() {
@@ -208,25 +209,29 @@
       function borrarEmpleado(id) {
         let peticion = new XMLHttpRequest();
 
-        peticion.open(
-          "DELETE",
-          "http://test-api.jtarrega.es/api/empleados/" + id,
-          false
-        ); // abrimos peticon con el id del empleado
+        IniciarTablero();//Carga el tablero por si hay alguna modificacion
 
-        peticion.onreadystatechange = function () {
-          if (
-            peticion.readyState == 4 &&
-            (peticion.status == 200 ||
-              peticion.status == 201 ||
-              peticion.status == 204)
-          ) {
-            //refresca la lista
-            IniciarTablero();
-          }
-        };
-        //enviamos la peticion
-        peticion.send();
+        if(cantidad>1){
+            peticion.open(
+            "DELETE",
+            "http://test-api.jtarrega.es/api/empleados/" + id,
+            false
+            ); // abrimos peticon con el id del empleado
+
+            peticion.onreadystatechange = function () {
+            if (
+                peticion.readyState == 4 &&
+                (peticion.status == 200 ||
+                peticion.status == 201 ||
+                peticion.status == 204)
+            ) {
+                //refresca la lista
+                IniciarTablero();
+            }
+            };
+            //enviamos la peticion
+            peticion.send();
+        }
       }
 
       function listarEmpleado(empleado) {
@@ -294,25 +299,28 @@
           //se añade el empleado a la lista
           listarEmpleado(empleado);
         }
+
+        cantidad = datos.length;
       }
 
       function IniciarTablero() {
 
         //crea la peticion
         let peticion = new XMLHttpRequest();
+        
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
         peticion.onreadystatechange = function () {
-          //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
+            //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
 
-        //vacia la lista
-        document.getElementById("listaEmpleados").innerHTML = "";
+            //vacia la lista
+            document.getElementById("listaEmpleados").innerHTML = "";
 
-          if (peticion.readyState == 4 && peticion.status == 200) {
-            let respuesta = peticion.responseText; // Contiene la respuesta como texto.
-            //empieza a crear la lista con la informacion recibida
-            console.log(respuesta);
-            crearListaEmpleados(respuesta);
-          }
+            if (peticion.readyState == 4 && peticion.status == 200) {
+                let respuesta = peticion.responseText; // Contiene la respuesta como texto.
+                //empieza a crear la lista con la informacion recibida
+                console.log(respuesta);
+                crearListaEmpleados(respuesta);
+            }
         };
 
         //abre la peticion
