@@ -39,7 +39,30 @@
       <button onclick="creadorEmpleado()">CREAR NUEVO EMPLEADO</button>
     </div>
     <div id="creadorDeEmpleado">
-      <form id="formEmpleado">
+      <form>
+        <h1>Nuevo Empleado</h1>
+        <fieldset>
+          <legend>Introduce datos</legend>
+          <label for="nombre">Nombre: </label>
+          <input type="text" id="nombre" />
+          <br />
+          <label for="edad">Edad: </label>
+          <input type="number" id="edad" />
+          <br />
+          <label for="cargo">Cargo: </label>
+          <input type="text" id="cargo" />
+          <br />
+          <label for="contratado">Empleado contratado: </label>
+          <input type="checkbox" id="contratado" />
+          <br />
+          <input type="submit" value="Aceptar" />
+          <input type="submit" value="Cancelar" />
+        </fieldset>
+      </form>
+    </div>
+
+    <div id="EditorDeEmpleado">
+      <form>
         <h1>Nuevo Empleado</h1>
         <fieldset>
           <legend>Introduce datos</legend>
@@ -62,16 +85,18 @@
     </div>
 
     <script>
-      const formulario = document.getElementById("creadorDeEmpleado");
+      const formularioCreador = document.getElementById("creadorDeEmpleado");
+      const formularioEditor = document.getElementById("EditorDeEmpleado");
+
       //abre el creador de empleados
       function creadorEmpleado() {
-        formulario.style.display = "block"; // Lo restaura
+        formularioCreador.style.display = "block"; // Lo restaura
 
-        const form = document.getElementById("formEmpleado");
+        let form = formularioCreador.firstChild;
 
         // Escucha el evento submit
         form.addEventListener("submit", function (evento) {
-          // Evitar que se envíe el formulario y recargue la página
+          // Evitar que se envíe el formularioCreador y recargue la página
           evento.preventDefault();
 
           const action = event.submitter.value; // Captura el botón presionado
@@ -114,9 +139,41 @@
             form.reset();
           }
 
-          // Ocultar el formulario después de enviar
-          formulario.style.display = "none"; // Elimina del diseño
+          // Ocultar el formularioCreador después de enviar
+          formularioCreador.style.display = "none"; // Elimina del diseño
         });
+      }
+
+      function modificarEmpelado(id) {
+        //abrir menu de modificacion
+        formularioEditor.style.display = "block"; // Elimina del diseño
+
+        formularioEditor.style.display = "none"; // Elimina del diseño
+      }
+
+      function borrarEmpleado(id) {
+        let peticion = new XMLHttpRequest();
+
+        peticion.open(
+          "DELETE",
+          "http://test-api.jtarrega.es/api/empleados/" + id,
+          false
+        ); // abrimos peticon con el id del empleado
+
+        console.log("Peticion eliminar empleado abierta");
+
+        peticion.onreadystatechange = function () {
+          if (
+            peticion.readyState == 4 &&
+            (peticion.status == 200 ||
+              peticion.status == 201 ||
+              peticion.status == 204)
+          ) {
+            console.log("Peticion realizada");
+            IniciarTablero();
+          }
+        };
+        peticion.send();
       }
 
       function listarEmpleado(empleado) {
@@ -152,35 +209,11 @@
 
         modificar = document.createElement("button");
         modificar.innerText = "modificar";
+        modificar.addEventListener("click", modificarEmpelado(idEmpleado));
 
         borrar = document.createElement("button");
         borrar.innerText = "borrar";
-        borrar.addEventListener("click", function (event) {
-          event.preventDefault();
-
-          let peticion = new XMLHttpRequest();
-
-          peticion.open(
-            "DELETE",
-            "http://test-api.jtarrega.es/api/empleados/" + idEmpleado,
-            false
-          ); // abrimos peticon con el id del empleado
-
-          console.log("Peticion eliminar empleado abierta");
-
-          peticion.onreadystatechange = function () {
-            if (
-              peticion.readyState == 4 &&
-              (peticion.status == 200 ||
-                peticion.status == 201 ||
-                peticion.status == 204)
-            ) {
-              console.log("Peticion realizada");
-              IniciarTablero();
-            }
-          };
-          peticion.send();
-        });
+        borrar.addEventListener("click", borrarEmpleado(idEmpleado));
 
         celda.appendChild(modificar);
         celda.appendChild(borrar);
@@ -204,7 +237,6 @@
 
       function IniciarTablero() {
         document.getElementById("listaEmpleados").innerHTML = "";
-        console.log(document.getElementById("listaEmpleados"));
 
         let peticion = new XMLHttpRequest();
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
@@ -221,7 +253,8 @@
         peticion.send();
       }
 
-      formulario.style.display = "none"; // Elimina del diseño
+      formularioEditor.style.display = "none"; // Elimina del diseño
+      formularioCreador.style.display = "none"; // Elimina del diseño
     </script>
   </body>
 </html>
