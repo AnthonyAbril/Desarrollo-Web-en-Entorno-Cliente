@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      #creadorDeEmpleado {
+      #creadorDeEmpleado,
+      #EditorDeEmpleado {
         background-color: red;
         position: absolute;
         top: 50%;
@@ -44,16 +45,16 @@
         <fieldset>
           <legend>Introduce datos</legend>
           <label for="nombre">Nombre: </label>
-          <input type="text" id="nombre" />
+          <input type="text" id="nombre" name="nombre" />
           <br />
           <label for="edad">Edad: </label>
-          <input type="number" id="edad" />
+          <input type="number" id="edad" name="edad" />
           <br />
           <label for="cargo">Cargo: </label>
-          <input type="text" id="cargo" />
+          <input type="text" id="cargo" name="cargo" />
           <br />
           <label for="contratado">Empleado contratado: </label>
-          <input type="checkbox" id="contratado" />
+          <input type="checkbox" id="contratado" name="contratado" />
           <br />
           <input type="submit" value="Aceptar" />
           <input type="submit" value="Cancelar" />
@@ -67,16 +68,16 @@
         <fieldset>
           <legend>Introduce datos</legend>
           <label for="nombre">Nombre: </label>
-          <input type="text" id="nombre" />
+          <input type="text" id="nombre" name="nombre" />
           <br />
           <label for="edad">Edad: </label>
-          <input type="number" id="edad" />
+          <input type="number" id="edad" name="edad" />
           <br />
           <label for="cargo">Cargo: </label>
-          <input type="text" id="cargo" />
+          <input type="text" id="cargo" name="cargo" />
           <br />
           <label for="contratado">Empleado contratado: </label>
-          <input type="checkbox" id="contratado" />
+          <input type="checkbox" id="contratado" name="contratado" />
           <br />
           <input type="submit" value="Aceptar" />
           <input type="submit" value="Cancelar" />
@@ -92,7 +93,7 @@
       function creadorEmpleado() {
         formularioCreador.style.display = "block"; // Lo restaura
 
-        let form = formularioCreador.firstChild;
+        let form = formularioCreador.querySelector("form");
 
         // Escucha el evento submit
         form.addEventListener("submit", function (evento) {
@@ -105,10 +106,10 @@
           if (action == "Aceptar") {
             //guardamos los datos
             let datosEmpleado = {
-              nombre: form.nombre.value,
-              edad: document.getElementById("edad").value,
-              cargo: document.getElementById("cargo").value,
-              contratado: document.getElementById("contratado").checked ? 1 : 0,
+              nombre: form.nombre.value.trim(),
+              edad: form.edad.value,
+              cargo: form.cargo.value.trim(),
+              contratado: form.contratado.checked ? 1 : 0,
             };
 
             //pasamos los datos a json
@@ -124,15 +125,14 @@
             );
             peticion.setRequestHeader("Content-Type", "application/json");
 
+            //enviamos el json
             peticion.send(jsonData);
 
+            //al cargar
             peticion.onload = function () {
               if (peticion.status === 200 || peticion.status === 201) {
-                console.log("Empleado añadido:", peticion.responseText);
                 //refrescamos lista
                 IniciarTablero();
-              } else {
-                console.error("Error en la solicitud:", peticion.statusText);
               }
             };
 
@@ -148,6 +148,59 @@
         //abrir menu de modificacion
         formularioEditor.style.display = "block"; // Elimina del diseño
 
+        let form = formularioEditor.querySelector("form");
+
+        form.querySelector("h1").innerText = "modificar empleado (" + id + ")";
+
+        // Escucha el evento submit
+        form.addEventListener("submit", function (evento) {
+          // Evitar que se envíe el formularioCreador y recargue la página
+          evento.preventDefault();
+
+          const action = evento.submitter.value; // Captura el botón presionado
+
+          //si le da a aceptar
+          if (action == "Aceptar") {
+            //guardamos los datos
+            let datosEmpleado = {
+              nombre: form.nombre.value.trim(),
+              edad: form.edad.value,
+              cargo: form.cargo.value.trim(),
+              contratado: form.contratado.checked ? 1 : 0,
+            };
+
+            //pasamos los datos a json
+            const jsonData = JSON.stringify(datosEmpleado);
+
+            let peticion = new XMLHttpRequest();
+
+            peticion.open(
+              "PUT",
+              "http://test-api.jtarrega.es/api/empleados/" + id,
+              false
+            ); // abrimos peticon con el id del empleado
+
+            peticion.onreadystatechange = function () {
+              if (
+                peticion.readyState == 4 &&
+                (peticion.status == 200 || peticion.status == 201)
+              ) {
+                IniciarTablero();
+              }
+            };
+            peticion.setRequestHeader("Content-Type", "application/json");
+            // informa al servidor que el cuerpo de la solicitud HTTP contiene datos en formato JSON.
+
+            peticion.send(jsonData);
+            //enviamos el json
+
+            form.reset();
+          }
+
+          // Ocultar el formularioEditor después de enviar
+          formularioEditor.style.display = "none"; // Elimina del diseño
+        });
+
         formularioEditor.style.display = "none"; // Elimina del diseño
       }
 
@@ -160,8 +213,6 @@
           false
         ); // abrimos peticon con el id del empleado
 
-        console.log("Peticion eliminar empleado abierta");
-
         peticion.onreadystatechange = function () {
           if (
             peticion.readyState == 4 &&
@@ -169,14 +220,16 @@
               peticion.status == 201 ||
               peticion.status == 204)
           ) {
-            console.log("Peticion realizada");
+            //refresca la lista
             IniciarTablero();
           }
         };
+        //enviamos la peticion
         peticion.send();
       }
 
       function listarEmpleado(empleado) {
+        //guardamos los datos del empleado
         var idEmpleado = empleado.id;
         var nombreEmpleado = empleado.nombre;
         var cargoEmpleado = empleado.cargo;
@@ -207,14 +260,19 @@
         //añadimos los botones
         celda = document.createElement("th");
 
+        //boton modificar
         modificar = document.createElement("button");
         modificar.innerText = "modificar";
-        modificar.addEventListener("click", modificarEmpelado(idEmpleado));
+        modificar.addEventListener("click", () =>
+          modificarEmpelado(idEmpleado)
+        ); //funcion al pulsarlo
 
+        //boton borrar
         borrar = document.createElement("button");
         borrar.innerText = "borrar";
-        borrar.addEventListener("click", borrarEmpleado(idEmpleado));
+        borrar.addEventListener("click", () => borrarEmpleado(idEmpleado)); //funcion al pulsarlo
 
+        //se agrega al DOM
         celda.appendChild(modificar);
         celda.appendChild(borrar);
         filaEmpleado.appendChild(celda);
@@ -223,34 +281,42 @@
       }
 
       function crearListaEmpleados(respuesta) {
+        //Si el servidor devuelve una respuesta vacía no hace nada
+        if (!respuesta) return;
+
         // Convertir la respuesta JSON en un objeto de JavaScript
         let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
 
-        console.log(datos);
         //por cada empleado
         for (var i = 0; i < datos.length; i++) {
           var empleado = datos[i];
-
+          //se añade el empleado a la lista
           listarEmpleado(empleado);
         }
       }
 
       function IniciarTablero() {
+        //vacia la lista
         document.getElementById("listaEmpleados").innerHTML = "";
 
+        //crea la peticion
         let peticion = new XMLHttpRequest();
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
         peticion.onreadystatechange = function () {
           //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
           if (peticion.readyState == 4 && peticion.status == 200) {
             let respuesta = peticion.responseText; // Contiene la respuesta como texto.
-
+            //empieza a crear la lista con la informacion recibida
             crearListaEmpleados(respuesta);
+          } else {
+            //si no conecta
+            document.body.innerHTML = "<p>NO DISPONIBLE</p>";
           }
         };
 
+        //abre la peticion
         peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
-        peticion.send();
+        peticion.send(); //envia la peticion
       }
 
       formularioEditor.style.display = "none"; // Elimina del diseño
