@@ -296,21 +296,21 @@
       }
 
       function IniciarTablero() {
-        //vacia la lista
-        document.getElementById("listaEmpleados").innerHTML = "";
 
         //crea la peticion
         let peticion = new XMLHttpRequest();
         //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
         peticion.onreadystatechange = function () {
           //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
+
+        //vacia la lista
+        document.getElementById("listaEmpleados").innerHTML = "";
+
           if (peticion.readyState == 4 && peticion.status == 200) {
             let respuesta = peticion.responseText; // Contiene la respuesta como texto.
             //empieza a crear la lista con la informacion recibida
+            console.log(respuesta);
             crearListaEmpleados(respuesta);
-          } else {
-            //si no conecta
-            document.body.innerHTML = "<p>NO DISPONIBLE</p>";
           }
         };
 
