@@ -18,52 +18,10 @@
       }
     </style>
   </head>
-  <body>
-    <!--
-        PODMAN
-        podman rm servidor-php
-        podman run -it -p 8080:80 --name servidor-php -v ./:/var/www/html docker.io/jtarrega/lamp:1.0
-        service apache2 start
-
-        Crear una aplicación CRUD que permita listar, insertar, modificar y borrar empleados de una 
-        base de datos remota utilizando una API RESTFUL y con formato de intercambio de datos 
-        JSON. La API tiene que recibir todas las peticiones en AJAX. Los “endpoint” de la API son:
-
-        "GET", http://test-api.jtarrega.es/api/empleados 
-            Devuelve un array, en que cada elemento es un JSON con los datos de un empleado: 
-            
-        "GET", http://test-api.jtarrega.es/api/empleados/{idempleado} 
-            Devuelve  un  array,  con  un  solo  elemento  que  es  un  JSON  con  los  datos  del  empleado 
-            solicitado en “idempleado”: 
-
-        Estos dos primeros “endpoint” devuelven 200 en status si todo ha ido bien. 
-
-        "POST", http://test-api.jtarrega.es/api/empleados 
-            Permite introducir un nuevo empleado en la BBDD, no se le enviará el id porque lo genera 
-            automáticamente, podemos utilizar para ello: 
-            // Objeto JavaScript 
-                const dataToSend = { 
-                    nombre: formulario.nombre.value, 
-                    edad: formulario.edad.value, 
-                    cargo: formulario.cargo.value, 
-                    contratado: formulario.contratado.checked ? 1 : 0 
-                }; 
-                // Convertir a JSON 
-                const jsonData = JSON.stringify(dataToSend); 
-            Si todo va bien devuelve 200 o 201 en status y se habrá insertado el nuevo registro. 
-        
-        "PUT", http://test-api.jtarrega.es/api/empleados/{idempleado} 
-            Permite modificar el registro en la BBDD con id=idempleado con los datos que le pasemos 
-            en el JSON (podemos usar el mismo objeto que el visto en el anterior) 
-            Si todo va bien devuelve 200 o 201 en status y se habrá modificado el registro con los 
-            datos proporcionados 
-        
-        "DELETE", http://test-api.jtarrega.es/api/empleados/{idempleado} 
-            Permite borrar el registro en la BBDD con id=idempleado. No necesitamos pasarle datos 
-            en JSON. Funciona como el GET que obtenía un elemento. 
-            Si todo va bien devuelve 200, 201 o 204 en status y se habrá eliminado el registro con el id 
-            proporcinado. 
-    -->
+  <body
+    onload="
+      IniciarTablero()"
+  >
     <h1>Gestión de Empleados</h1>
     <div id="caja">
       <table>
@@ -81,7 +39,7 @@
       </table>
     </div>
     <div id="creadorDeEmpleado">
-      <form>
+      <form id="formEmpleado">
         <h1>Nuevo Empleado</h1>
         <fieldset>
           <legend>Introduce datos</legend>
@@ -97,107 +55,99 @@
           <label for="contratado">Empleado contratado: </label>
           <input type="checkbox" id="contratado" />
           <br />
-          <input type="submit" value="Aceptar" onclick="crearEmpleado()" />
-          <input
-            type="submit"
-            value="Borrar"
-            onclick="document.getElementById('creadorDeEmpleado').visibility = 'hidden';"
-          />
+          <input type="submit" value="Aceptar" />
+          <input type="submit" value="Cancelar" />
         </fieldset>
       </form>
     </div>
-    <script>
-      peticion = new XMLHttpRequest();
 
+    <script>
       //abre el creador de empleados
       function creadorEmpleado() {
-        formulario = document.getElementById("creadorDeEmpleado");
+        const formulario = document.getElementById("creadorDeEmpleado");
         formulario.style.visibility = "visible";
-        formulario = formulario.firstChild;
+        const form = document.getElementById("formEmpleado");
 
         // Escucha el evento submit
-        formulario.addEventListener("submit", function (evento) {
+        form.addEventListener("submit", function (evento) {
           // Evitar que se envíe el formulario y recargue la página
           evento.preventDefault();
 
-          /*
-          const datosFormulario = new FormData(formulario);
-          // Convertir FormData a JSON
-          const datosJSON = Object.fromEntries(datosFormulario.entries());
-        */
-          const dataToSend = {
-            nombre: formulario.nombre.value,
-            edad: formulario.edad.value,
-            cargo: formulario.cargo.value,
-            contratado: formulario.contratado.checked ? 1 : 0,
-          };
-          // Convertir a JSON
-          const jsonData = JSON.stringify(dataToSend);
+          const action = event.submitter.value; // Captura el botón presionado
 
-          // Enviar los datos al servidor
-          // Configurar la solicitud: método y URL
+          //si le da a aceptar
+          if (action == "Aceptar") {
+            //guardamos los datos
+            let datosEmpleado = {
+              nombre: document.getElementById("nombre").value,
+              edad: document.getElementById("edad").value,
+              cargo: document.getElementById("cargo").value,
+              contratado: document.getElementById("contratado").checked ? 1 : 0,
+            };
+
+            //pasamos los datos a json
+            const jsonData = JSON.stringify(datosEmpleado);
+
+            form.reset();
+          }
+
+          /*
+          // Aquí puedes enviar los datos al servidor
           peticion.open(
             "POST",
             "http://test-api.jtarrega.es/api/empleados",
             true
           );
-
-          // Establecer el encabezado si envías JSON
           peticion.setRequestHeader("Content-Type", "application/json");
 
-          // Manejar la respuesta del servidor
           peticion.onload = function () {
             if (peticion.status === 200) {
-              // Analiza la respuesta si es JSON
-              const respuesta = JSON.parse(peticion.responseText);
-              console.log("Respuesta del servidor:", respuesta);
+              console.log("Empleado añadido:", peticion.responseText);
+              // Aquí puedes hacer algo con la respuesta, como actualizar la lista de empleados.
             } else {
               console.error("Error en la solicitud:", peticion.statusText);
             }
           };
 
-          // Manejar errores
-          peticion.onerror = function () {
-            console.error("Error de conexión o de red.");
-          };
+          peticion.send(jsonData);
 
-          // Enviar la solicitud con los datos
-          peticion.send(JSON.stringify(datosJSON));
+          */
+
+          // Ocultar el formulario después de enviar
+          formulario.style.visibility = "hidden";
         });
       }
 
-      //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
-      peticion.onreadystatechange = function () {
-        //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
-        if (peticion.readyState == 4 && peticion.status == 200) {
-          let respuesta = peticion.responseText; // Contiene la respuesta como texto.
-          console.log("Datos recibidos:", respuesta);
+      function IniciarTablero() {
+        peticion = new XMLHttpRequest();
+        //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
+        peticion.onreadystatechange = function () {
+          //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
+          if (peticion.readyState == 4 && peticion.status == 200) {
+            let respuesta = peticion.responseText; // Contiene la respuesta como texto.
 
-          // Convertir la respuesta JSON en un objeto de JavaScript
-          let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
-          console.log("Empleados:", datos);
+            // Convertir la respuesta JSON en un objeto de JavaScript
+            let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
 
-          //por cada empleado
-          for (var i = 0; i < datos.length; i++) {
-            var empleado = datos[i];
+            //por cada empleado
+            for (var i = 0; i < datos.length; i++) {
+              var empleado = datos[i];
 
-            listarEmpleado(empleado);
+              listarEmpleado(empleado);
+            }
+
+            let crearNuevoEmpleado = document.createElement("button");
+            crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
+            crearNuevoEmpleado.addEventListener("click", () => {
+              creadorEmpleado();
+            });
+            document.body.appendChild(crearNuevoEmpleado);
           }
+        };
 
-          crearNuevoEmpleado = document.createElement("button");
-          crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
-          crearNuevoEmpleado.addEventListener("click", () => {
-            creadorEmpleado();
-          });
-          document.body.appendChild(crearNuevoEmpleado);
-        }
-      };
-
-      //se abre y configura la peticion
-      peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
-
-      //se encia la peticion
-      peticion.send();
+        peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
+        peticion.send();
+      }
 
       function listarEmpleado(empleado) {
         var idEmpleado = empleado.id;

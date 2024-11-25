@@ -6,7 +6,7 @@
     <title>Document</title>
   </head>
   <body>
-    <form>
+    <form id="formulario">
       <h1>Nuevo Empleado</h1>
       <fieldset>
         <legend>Introduce datos</legend>
@@ -21,5 +21,14 @@
         <input type="submit" />
       </fieldset>
     </form>
+    <script>
+      formulario = document.getElementById("formulario");
+
+      formulario.addEventListener("submit", function (event) {
+        // Evitar que se envíe el formulario y recargue la página
+        event.preventDefault();
+        this.reset();
+      });
+    </script>
   </body>
 </html>
