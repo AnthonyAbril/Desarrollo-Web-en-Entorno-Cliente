@@ -37,6 +37,7 @@
         </thead>
         <tbody id="listaEmpleados"></tbody>
       </table>
+      <button onclick="creadorEmpleado()">CREAR NUEVO EMPLEADO</button>
     </div>
     <div id="creadorDeEmpleado">
       <form id="formEmpleado">
@@ -79,7 +80,7 @@
           if (action == "Aceptar") {
             //guardamos los datos
             let datosEmpleado = {
-              nombre: document.getElementById("nombre").value,
+              nombre: form.nombre.value,
               edad: document.getElementById("edad").value,
               cargo: document.getElementById("cargo").value,
               contratado: document.getElementById("contratado").checked ? 1 : 0,
@@ -99,9 +100,12 @@
             peticion.setRequestHeader("Content-Type", "application/json");
 
             peticion.onload = function () {
-              if (peticion.status === 200) {
+              if (peticion.status === 200 || peticion.status === 201) {
                 console.log("Empleado añadido:", peticion.responseText);
                 // Aquí puedes hacer algo con la respuesta, como actualizar la lista de empleados.
+
+                let respuesta = peticion.responseText; // Contiene la respuesta como texto.
+                crearListaEmpleados(respuesta);
               } else {
                 console.error("Error en la solicitud:", peticion.statusText);
               }
@@ -114,38 +118,10 @@
 
           // Ocultar el formulario después de enviar
           formulario.style.visibility = "hidden";
+
+          //refrescamos lista
+          IniciarTablero();
         });
-      }
-
-      function IniciarTablero() {
-        let peticion = new XMLHttpRequest();
-        //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
-        peticion.onreadystatechange = function () {
-          //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
-          if (peticion.readyState == 4 && peticion.status == 200) {
-            let respuesta = peticion.responseText; // Contiene la respuesta como texto.
-
-            // Convertir la respuesta JSON en un objeto de JavaScript
-            let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
-
-            //por cada empleado
-            for (var i = 0; i < datos.length; i++) {
-              var empleado = datos[i];
-
-              listarEmpleado(empleado);
-            }
-
-            let crearNuevoEmpleado = document.createElement("button");
-            crearNuevoEmpleado.innerText = "CREAR NUEVO EMPLEADO";
-            crearNuevoEmpleado.addEventListener("click", () => {
-              creadorEmpleado();
-            });
-            document.body.appendChild(crearNuevoEmpleado);
-          }
-        };
-
-        peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
-        peticion.send();
       }
 
       function listarEmpleado(empleado) {
@@ -155,7 +131,7 @@
         var edadEmpleado = empleado.edad;
         var contratadoEmpleado = empleado.contratado;
 
-        lista = document.getElementById("listaEmpleados");
+        let lista = document.getElementById("listaEmpleados");
 
         //fila por cada empleado
         filaEmpleado = document.createElement("tr");
@@ -178,15 +154,75 @@
 
         //añadimos los botones
         celda = document.createElement("th");
+
         modificar = document.createElement("button");
         modificar.innerText = "modificar";
+
         borrar = document.createElement("button");
         borrar.innerText = "borrar";
+        borrar.addEventListener("click", function (event) {
+          event.preventDefault();
+
+          let peticion = new XMLHttpRequest();
+
+          peticion.open(
+            "DELETE",
+            "http://test-api.jtarrega.es/api/empleados/" + idEmpleado,
+            false
+          ); // abrimos peticon con el id del empleado
+
+          console.log("Peticion eliminar empleado abierta");
+
+          peticion.onreadystatechange = function () {
+            if (
+              peticion.readyState == 4 &&
+              (peticion.status == 200 ||
+                peticion.status == 201 ||
+                peticion.status == 204)
+            ) {
+              console.log("Peticion realizada");
+              IniciarTablero();
+            }
+          };
+          peticion.send();
+        });
+
         celda.appendChild(modificar);
         celda.appendChild(borrar);
         filaEmpleado.appendChild(celda);
 
         lista.appendChild(filaEmpleado);
+      }
+
+      function crearListaEmpleados(respuesta) {
+        // Convertir la respuesta JSON en un objeto de JavaScript
+        let datos = JSON.parse(respuesta); // Si la respuesta es JSON, parsearla.
+
+        console.log(datos);
+        //por cada empleado
+        for (var i = 0; i < datos.length; i++) {
+          var empleado = datos[i];
+
+          listarEmpleado(empleado);
+        }
+      }
+
+      function IniciarTablero() {
+        document.getElementById("listaEmpleados").innerHTML = "";
+
+        let peticion = new XMLHttpRequest();
+        //establecemos el metodo que se ejecutara cuando cambie el estado de la peticion
+        peticion.onreadystatechange = function () {
+          //si la solicitud ha sido completada y el servidor responde que la solicitud fue exitosa.
+          if (peticion.readyState == 4 && peticion.status == 200) {
+            let respuesta = peticion.responseText; // Contiene la respuesta como texto.
+
+            crearListaEmpleados(respuesta);
+          }
+        };
+
+        peticion.open("GET", "http://test-api.jtarrega.es/api/empleados", true);
+        peticion.send();
       }
     </script>
   </body>
