@@ -7,24 +7,20 @@
     <script>
       // Función para establecer una cookie
       function setCookie(nombre, valor, dias) {
-        var fecha = new Date(); //crea una fecha
-        fecha.setDate(fecha.getDate() + dias); //guarda fecha de hoy mas los dias que durara la cookie
-        expires = "" + fecha.toUTCString(); //introduce la fecha en UTC
-        document.cookie = nombre + "=" + cookieValor; //introducimos los valores
-        document.cookie = name + "=" + valor + ";" + expires + ";path=/";
+        const fecha = new Date(); // Crea una fecha
+        fecha.setDate(fecha.getDate() + dias); // Suma días a la fecha actual
+        const expires = "expires=" + fecha.toUTCString(); // Fecha en formato UTC
+        document.cookie = nombre + "=" + valor + ";" + expires + ";path=/"; // Configura la cookie
       }
 
       // Función para obtener una cookie
       function getCookie(name) {
-        const cname = name + "="; //inicio del cookie buscado con su nombre
-        const ca = document.cookie.split(";"); //divide las lineas del documento en un array
+        const cname = name + "="; // Inicio del cookie buscado con su nombre
+        const ca = document.cookie.split(";"); // Divide las líneas del documento en un array
         for (let i = 0; i < ca.length; i++) {
-          //recorre el array de las lineas
-          let c = ca[i].trim(); //quita los espacios a ambos lados de la linea
-          while (c.charAt(0) == "") c = c.substring(1, c.length);
+          let c = ca[i].trim(); // Quita los espacios a ambos lados de la línea
           if (c.indexOf(cname) === 0) {
-            //si la linea empieza con el nombre de la cookie a extraer
-            return c.substring(cname.length, c.length); //devuelve la linea donde se extrae el valor
+            return c.substring(cname.length, c.length); // Extrae el valor del cookie
           }
         }
         return "";
@@ -46,11 +42,19 @@
 
       // Guardar los datos en cookies cuando se envía el formulario
       function guardarFormulario(event) {
+        event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+
         const recordar = document.getElementById("recordar").checked;
+        const usuario = document.getElementById("usuario").value.trim();
+        const clave = document.getElementById("clave").value.trim();
+        const colorfondo = document.getElementById("colorfondo").value.trim();
+
         if (recordar) {
-          const usuario = document.getElementById("usuario").value;
-          const clave = document.getElementById("clave").value;
-          const colorfondo = document.getElementById("colorfondo").value;
+          // Validar los campos antes de guardar
+          if (usuario === "" || clave === "" || colorfondo === "") {
+            alert("Por favor, completa todos los campos antes de guardar.");
+            return;
+          }
 
           setCookie("usuario", usuario, 30); // Guardar por 30 días
           setCookie("clave", clave, 30);
@@ -61,22 +65,16 @@
           setCookie("clave", "", -1);
           setCookie("colorfondo", "", -1);
         }
+
+        // Cambiar el color de fondo después de guardar
+        document.body.style.backgroundColor = colorfondo;
+        alert("Formulario guardado correctamente.");
       }
     </script>
   </head>
   <body onload="cargarFormulario()">
     <form onsubmit="guardarFormulario(event)">
       <fieldset>
-        <!--
-            Implementar un formulario de logueo personalizado, que presente los siguientes campos:
-                • Usuario: de texto para introducir el nombre de usuario
-                • Clave: de texto para introducir la password de usuario
-                • Color de fondo: para escribir el color de fondo deseado
-                • Recordar: checkbox para indicar si recordar los parámetros anteriores la próxima
-                vez que se acceda al formulario (usando cookies)
-                • Enviar: botón de envío del formulario
-            La interfaz puede ser similar a la siguiente:
-            -->
         <legend>Formulario de logueo personalizado</legend>
         <div>
           <label for="usuario">Usuario:</label>
