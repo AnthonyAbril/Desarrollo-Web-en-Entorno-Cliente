@@ -1,0 +1,86 @@
+<!--
+
+1.1. Crea 4 etiquetas de cabecera desde la <h1> hasta la <h4>.  
+• Dentro de cada cabecera estará el text: Bienvenido a mi web 
+• Todos los textos entran desde la derecha de la página al cargarse y se 
+• posicionan en la izquierda. 
+• Cada elemento tarda un tiempo determinado en llegar, siendo el <h1> el 
+• primero de ellos y los demás correlativamente 
+
+1.2. Editamos la anterior animación. Borrando las etiquetas y las animaciones de la 
+<h2> a la <h4> 
+• Crea  un  fotograma  intermedio que  en  el  75% de  la  animación el  tamaño  de  la 
+letra aumente al 300% y un margen a la izquierda del 25%. 
+
+1.3. Un cuadro giratorio. El objetivo es crear un bloque cuadrado de 200px de ancho 
+por  100px  de  alto  que  gire  en  la  pantalla  360º  en  sentido  horario  una  sola  vez  y 
+quede girado al final de la animación. El giro será lento al inicio y al final, y durará 3 
+segundos. 
+
+1.4. Desplazamiento por la pantalla. Se trata de crear un círculo de color azul que se 
+mueva  de  uno  a  tro  extremo  de  la  pantalla.  El  movimiento  será  lento  al  inicio  y 
+durará 5segundos.el círulo debe tener un radio de 100px 
+
+1.5. Zoom  de  un  texto.  Diseña  una  animación  en  la  que  un  texto  con  formato  h1 
+crezca al doble de tamaño en 1 seg, luego se reduzca a un 25% en 1seg y finalmente 
+vuelva  a us  tamaño original.  El  efecto  se producirá  al  pasar  el  ratón  por el  texto  y 
+durará en total 3s. Los cambios serán lineales. 
+
+1.6. Cambios  de  colores.  Crear  un  bloque  cuadrado  de  300px  cuyo  color  de  fondo 
+cambia gradualmente de rojo (#FF0000) a rosa ( #FFC0CB) y de este a azul (#0000FF). 
+Toda  la  animación  durará  5  segundos e  irá  primero de  rojo  a  azul  y  luego  al revés 
+repitiéndose 4 veces. 
+
+1.7. Giros en 3d a dos caras. Crear un cartel que gira, pero en 3D, alrededor del eje 
+vertical,  eje  Y.  Se  trata  de  un  bloque  de  400x400px  con  fondo  de  color  rojo  por 
+ejemplo que debe girar 180º mostrando su cara posterior que tendrá color azul. El 
+giro se debe ver en perspectiva.
+
+[El 2 no se hace (solo al final)]
+2,8,5,6 se hacen
+
+
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .titulo{
+            transform: translate(100vw, 0px);
+        }
+        .entrada {
+            animation-duration: 3s;
+            animation-name: animacionTitulo;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes animacionTitulo {
+            from { transform: translate(100vw, 0px);  }
+            to { transform: translate(0, 0px); }
+        }
+    </style>
+    <script>
+
+        function saletexto(numero) {
+            titulo = "titulo"+numero;
+            document.getElementById(titulo).className = "entrada";
+        }
+        function animacionEntrada() {
+            saletexto(1);
+            setTimeout(saletexto(2), 5000);    //se le da la clase al elemento titulo pasado ese tiempo
+        }
+        
+        animacionEntrada()
+    </script>
+</head>
+<body>
+    <h1 id="titulo1" class="titulo">Bienvenido a mi web</h1>
+    <h2 id="titulo2" class="titulo">Bienvenido a mi web</h2>
+    <h3 id="titulo3" class="titulo">Bienvenido a mi web</h3>
+    <h4 id="titulo4" class="titulo">Bienvenido a mi web</h4>
+</body>
+</html>
