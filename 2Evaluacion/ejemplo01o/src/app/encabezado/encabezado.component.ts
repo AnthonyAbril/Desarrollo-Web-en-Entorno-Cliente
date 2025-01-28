@@ -9,4 +9,4 @@ import { Component, Input } from '@angular/core';
 })
 export class EncabezadoComponent {
   @Input() titulo: string="";
- }
+}

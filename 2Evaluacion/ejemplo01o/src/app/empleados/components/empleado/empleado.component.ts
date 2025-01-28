@@ -37,7 +37,7 @@ export class EmpleadoComponent implements CanComponentDeactivate {
       this.traeEmpleado(this.id);
     }
   }
-  private traeEmpleado(id: number) {
+  private traeEmpleado(id:number){
     this._empleadosService.obtengoEmpleadoApi(id).subscribe({
       next: (resultado) => {
         if (resultado.mensaje == "OK") {
@@ -56,22 +56,20 @@ export class EmpleadoComponent implements CanComponentDeactivate {
     });
   }
   guardaEmpleado(): void {
-    if (this.empleadoForm!.valid || this.tipo == 2) { //El borrado era readonly
+    if (this.empleadoForm!.valid || this.tipo == 2 ) { //El borrado era readonly
       this.formularioCambiado = false;
       if (this.tipo == 0) {
         this.empleadoact.contratado = this.inputChecked ? 1 : 0;
         this._empleadosService.guardaNuevoEmpleadoApi(this.empleadoact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              this.toastr.success('El empleado se ha registrado con éxito!!', 'Añadido empleado', {positionClass: 'toast-bottom-right'});
+              this.toastr.success('Se ha agregado '+resultado.datos.nombre, 'Empleado agregado correctamente!');
               this._route.navigate(['/empleados']);
             } else {
-              // console.error('Error al agregar el empleado:', resultado.errores);
               this.toastr.error(resultado.errores, 'Error guardando empleado');
             }
           },
           error: (error) => {
-            // console.error('Error al agregar el empleado:', error.error.errores);
             this.toastr.error(error.error.errores, 'Error guardando empleado');
           },
           complete: () => {
@@ -84,8 +82,7 @@ export class EmpleadoComponent implements CanComponentDeactivate {
         this._empleadosService.modificaEmpleadoApi(this.id, this.empleadoact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              this.toastr.success('Se ha modificado ' + resultado.datos.nombre,
-                'Empleado modificado correctamente!');
+              this.toastr.success('Se ha modificado '+resultado.datos.nombre, 'Empleado modificado correctamente!');
               this._route.navigate(['/empleados']);
             } else {
               this.toastr.error(resultado.errores, 'Error modificando empleado');
@@ -103,8 +100,7 @@ export class EmpleadoComponent implements CanComponentDeactivate {
         this._empleadosService.borraEmpleadoApi(this.id).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              this.toastr.success('Se ha eliminado ' + resultado.datos.nombre,
-                'Empleado eliminado correctamente!');
+              this.toastr.success('Se ha eliminado '+resultado.datos.nombre, 'Empleado eliminado correctamente!');
               this._route.navigate(['/empleados']);
             } else {
               this.toastr.error(resultado.errores, 'Error eliminando empleado');
@@ -124,7 +120,7 @@ export class EmpleadoComponent implements CanComponentDeactivate {
   canDeactivate(): boolean {
     if (this.formularioCambiado) {
       return confirm(
-        'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?'
+        'Tienes cambios sin guardar. ¿Estás seguro de que quieres descartar los cambios?'
       );
     }
     return true;
@@ -138,5 +134,4 @@ export class EmpleadoComponent implements CanComponentDeactivate {
       [errorClass]: ngModel.touched && ngModel.invalid
     };
   }
-
 }

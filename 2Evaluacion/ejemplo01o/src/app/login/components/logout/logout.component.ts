@@ -6,18 +6,17 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-logout',
   standalone: false,
-
+  
   templateUrl: './logout.component.html',
   styleUrl: './logout.component.css'
 })
 export class LogoutComponent {
-  constructor(private _loginService: LoginService, private _route: Router,
-    private toastr: ToastrService) { }
-  ngOnInit() {
+  constructor(private _loginService: LoginService, private _route: Router, private toastr: ToastrService) { }
+  ngOnInit(){
     this._loginService.salirAplicacion();
     this.toastr.success('Has abandonado la aplicación correctamente', 'Hasta pronto');
   }
-  volverAentrar() {
+  volverAentrar(){
     this._route.navigate(['/login']);
   }
 }

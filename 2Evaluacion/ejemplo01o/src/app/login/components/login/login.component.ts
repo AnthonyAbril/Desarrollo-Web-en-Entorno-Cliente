@@ -32,8 +32,7 @@ export class LoginComponent {
           this._route.navigate(['/bienvenido']);
         },
         error: (error) => {
-          console.error('Error al hacer el login:', error);
-          alert('Usuario o contraseña incorrectos, íntentalo de nuevo');
+          alert('Usuario o contraseña incorrectos, íntentalo de nuevo ('+error.statusText+')');
           this.loginForm.setValue({
             usuario: '',
             contrasenya: '',
@@ -43,7 +42,7 @@ export class LoginComponent {
           console.log('Operación completada.');
         },
       });
-    } else this.toastr.error("Datos introducidos no válidos", 'Error de validación');
+    } else this.toastr.error('Datos introducidos no válidos', 'Error de autentficación');
   }
   // Método para obtener los errores del campo si los necesitas
   get usuario() {

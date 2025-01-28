@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NominasService } from '../../nominas.service';
 import { CanComponentDeactivate } from '../../../can-component-deactivate.interface';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nominas-nomina',
@@ -21,7 +22,7 @@ export class NominaComponent implements CanComponentDeactivate {
   public txtBtn: string = 'Guardar';
   public formularioCambiado: boolean = false;
 
-  constructor(private _aroute: ActivatedRoute, private _nominasService: NominasService, private _route: Router) { }
+  constructor(private _aroute: ActivatedRoute, private _nominasService: NominasService, private _route: Router, private toastr: ToastrService) { }
   ngOnInit() {
     this.tipo = +this._aroute.snapshot.params['tipo'];
     this.id = +this._aroute.snapshot.params['id']; // Recibimos parámetro
@@ -40,11 +41,11 @@ export class NominaComponent implements CanComponentDeactivate {
         if (resultado.mensaje == "OK") {
           this.nominaact = resultado.datos;
         } else {
-          console.error('Error al obtener la nómina:', resultado.mensaje);
+          this.toastr.error(resultado.mensaje, 'Error al obtener la nómina');
         }
       },
       error: (error) => {
-        console.error('Error al obtener la nómina:', error);
+        this.toastr.error(error, 'Error al obtener la nómina');
       },
       complete: () => {
         console.log('Operación completada.');
@@ -58,14 +59,14 @@ export class NominaComponent implements CanComponentDeactivate {
         this._nominasService.guardaNuevoNominaApi(this.nominaact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Nómina agregada:', resultado.datos);
+              this.toastr.success('Se ha agregado '+resultado.datos.nombre, 'Nómina agregada correctamente!');
               this._route.navigate(['/nominas']);
             } else {
-              console.error('Error al agregar la nómina:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error guardando nómina');
             }
           },
           error: (error) => {
-            console.error('Error al agregar la nómina:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error guardando nómina');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -76,14 +77,14 @@ export class NominaComponent implements CanComponentDeactivate {
         this._nominasService.modificaNominaApi(this.id, this.nominaact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Nómina modificada:', resultado.datos);
+              this.toastr.success('Se ha modificado '+resultado.datos.nombre, 'Nómina modificada correctamente!');
               this._route.navigate(['/nominas']);
             } else {
-              console.error('Error al modificar la nómina:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error modificando nómina');
             }
           },
           error: (error) => {
-            console.error('Error al modificar la nómina:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error modificando nómina');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -94,21 +95,21 @@ export class NominaComponent implements CanComponentDeactivate {
         this._nominasService.borraNominaApi(this.id).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Valor eliminado:', resultado.datos);
+              this.toastr.success('Se ha eliminado '+resultado.datos.nombre, 'Nómina eliminada correctamente!');
               this._route.navigate(['/nominas']);
             } else {
-              console.error('Error al eliminar la nómina:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error eliminando nómina');
             }
           },
           error: (error) => {
-            console.error('Error al borrar el valor:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error eliminando nómina');
           },
           complete: () => {
             console.log('Operación completada.');
           },
         });
       }
-    } else alert("El formulario tiene campos inválidos");
+    } else this.toastr.error("El formulario tiene campos inválidos", 'Error de validación');
   }
   cambiado(): void {
     this.formularioCambiado = true;

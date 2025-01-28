@@ -13,6 +13,8 @@ import { CommentsModule } from './comments/comments.module';
 import { EncabezadoComponent } from './encabezado/encabezado.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { ChartsModule } from './charts/charts.module';
 
 @NgModule({
   declarations: [
@@ -30,10 +32,12 @@ import { ToastrModule } from 'ngx-toastr';
     CommentsModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
+    ChartsModule
   ],
   providers: [
     Title, 
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideCharts(withDefaultRegisterables())
   ],
   bootstrap: [AppComponent]
 })

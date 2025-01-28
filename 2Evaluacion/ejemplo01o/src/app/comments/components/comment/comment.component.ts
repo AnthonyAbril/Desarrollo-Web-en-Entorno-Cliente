@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Comment } from '../../Comment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommentsService } from '../../comments.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-comment',
@@ -20,7 +21,7 @@ export class CommentComponent {
   public txtBtn: string = 'Guardar';
   public formularioCambiado: boolean = false;
 
-  constructor(private _aroute: ActivatedRoute, private _commentsService: CommentsService, private _route: Router) { }
+  constructor(private _aroute: ActivatedRoute, private _commentsService: CommentsService, private _route: Router, private toastr: ToastrService) { }
   ngOnInit() {
     this.tipo = +this._aroute.snapshot.params['tipo'];
     this.id = +this._aroute.snapshot.params['id']; // Recibimos parámetro
@@ -39,11 +40,11 @@ export class CommentComponent {
         if (resultado.mensaje == "OK") {
           this.commentact = resultado.datos;
         } else {
-          console.error('Error al obtener el comentario:', resultado.mensaje);
+          this.toastr.error(resultado.mensaje, 'Error al obtener el comentario');
         }
       },
       error: (error) => {
-        console.error('Error al obtener el comentario:', error);
+        this.toastr.error(error, 'Error al obtener el comentario');
       },
       complete: () => {
         console.log('Operación completada.');
@@ -57,14 +58,14 @@ export class CommentComponent {
         this._commentsService.guardaNuevoComentarioApi(this.commentact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Comentario agregado:', resultado.datos);
+              this.toastr.success('Se ha agregado '+resultado.datos.nombre, 'Comentario agregado correctamente!');
               this._route.navigate(['/comentarios']);
             } else {
-              console.error('Error al agregar el comentario:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error guardando comentario');
             }
           },
           error: (error) => {
-            console.error('Error al agregar el comentario:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error guardando comentario');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -75,14 +76,14 @@ export class CommentComponent {
         this._commentsService.modificaComentarioApi(this.id, this.commentact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Comentario modificado:', resultado.datos);
+              this.toastr.success('Se ha modificado '+resultado.datos.nombre, 'Comentario modificado correctamente!');
               this._route.navigate(['/comentarios']);
             } else {
-              console.error('Error al modificar el comentario:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error modificando comentario');
             }
           },
           error: (error) => {
-            console.error('Error al modificar el comentario:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error modificando comentario');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -93,21 +94,21 @@ export class CommentComponent {
         this._commentsService.borraComentarioApi(this.id).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Valor eliminado:', resultado.datos);
+              this.toastr.success('Se ha eliminado '+resultado.datos.nombre, 'Comentario eliminado correctamente!');
               this._route.navigate(['/comentarios']);
             } else {
-              console.error('Error al eliminar el comentario:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error eliminando comentario');
             }
           },
           error: (error) => {
-            console.error('Error al borrar el comentario:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error eliminando comentario');
           },
           complete: () => {
             console.log('Operación completada.');
           },
         });
       }
-    } else alert("El formulario tiene campos inválidos");
+    } else this.toastr.error("El formulario tiene campos inválidos", 'Error de validación');
   }
   cambiado(): void {
     this.formularioCambiado = true;

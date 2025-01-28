@@ -6,23 +6,21 @@ import autoTable from 'jspdf-autotable';
 @Component({
   selector: 'app-empleados-lista',
   standalone: false,
-
+  
   templateUrl: './lista.component.html',
   styleUrl: './lista.component.css'
 })
 export class ListaComponent {
-  public filterSearch: string = '';
+  public filterSearch:string = '';
+  public cargando:boolean = true;
   empleados: any;
-  public cargando: boolean = false;
-
   constructor(private _empleadosService: EmpleadosService) { }
   ngOnInit() {
-    this.cargando = true;
     this._empleadosService.obtengoEmpleadosApi().subscribe({
       next: (resultado) => {
-        if (resultado.mensaje == "OK") {
+        if (resultado.mensaje == "OK"){
           this.empleados = resultado.datos;
-        } else {
+        }else{
           console.error('Error al recibir datos:', resultado.error);
         }
       },
@@ -30,25 +28,21 @@ export class ListaComponent {
         console.error('Error al recibir datos:', error);
       },
       complete: () => {
-        console.log('Operación completada.');
-        this.cargando = false;
+        setTimeout(()=>{
+          this.cargando = false;
+        },500) 
       },
     });
   }
-
   descargarPDF() {
     const doc = new jsPDF(); // Crear instancia de jsPDF
     // Agregar título o texto opcional
     doc.text('Tabla Exportada', 14, 10);
     // Seleccionar la tabla y convertirla a un formato adecuado
     autoTable(doc, {
-      html: '#tbempleados',
-      startY: 20,
-      styles: { fontSize: 10, textColor: [0, 0, 0], fillColor: [240, 240, 240]
-     },
-      headStyles: { fillColor: [100, 100, 255] },
-      margin: { top: 20 },
-     });
+      html: '#tbempleados', // Selecciona la tabla por su ID
+      startY: 20, // Define la posición inicial en Y
+    });
     // Guardar el PDF con un nombre
     doc.save('tabla.pdf');
   }

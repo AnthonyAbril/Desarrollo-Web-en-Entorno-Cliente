@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FacturasService } from '../../facturas.service';
 import { CanComponentDeactivate } from '../../../can-component-deactivate.interface';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-facturas-factura',
@@ -21,7 +22,7 @@ export class FacturaComponent implements CanComponentDeactivate {
   public txtBtn: string = 'Guardar';
   public formularioCambiado: boolean = false;
 
-  constructor(private _aroute: ActivatedRoute, private _facturasService: FacturasService, private _route: Router) { }
+  constructor(private _aroute: ActivatedRoute, private _facturasService: FacturasService, private _route: Router, private toastr: ToastrService) { }
   ngOnInit() {
     this.tipo = +this._aroute.snapshot.params['tipo'];
     this.id = +this._aroute.snapshot.params['id']; // Recibimos parámetro
@@ -40,11 +41,11 @@ export class FacturaComponent implements CanComponentDeactivate {
         if (resultado.mensaje == "OK") {
           this.facturaact = resultado.datos;
         } else {
-          console.error('Error al obtener la factura:', resultado.mensaje);
+          this.toastr.error(resultado.mensaje, 'Error al obtener la factura');
         }
       },
       error: (error) => {
-        console.error('Error al obtener la factura:', error);
+        this.toastr.error(error, 'Error al obtener la factura');
       },
       complete: () => {
         console.log('Operación completada.');
@@ -58,14 +59,14 @@ export class FacturaComponent implements CanComponentDeactivate {
         this._facturasService.guardaNuevoFacturaApi(this.facturaact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Factura agregada:', resultado.datos);
+              this.toastr.success('Se ha agregado '+resultado.datos.cliente, 'Factura agregada correctamente!');
               this._route.navigate(['/facturas']);
             } else {
-              console.error('Error al agregar la factura:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error guardando factura');
             }
           },
           error: (error) => {
-            console.error('Error al agregar la factura:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error guardando factura');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -76,14 +77,14 @@ export class FacturaComponent implements CanComponentDeactivate {
         this._facturasService.modificaFacturaApi(this.id, this.facturaact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Factura modificada:', resultado.datos);
+              this.toastr.success('Se ha modificado '+resultado.datos.cliente, 'Factura modificada correctamente!');
               this._route.navigate(['/facturas']);
             } else {
-              console.error('Error al modificar la factura:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error modificando factura');
             }
           },
           error: (error) => {
-            console.error('Error al modificar la factura:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error modificando factura');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -94,22 +95,21 @@ export class FacturaComponent implements CanComponentDeactivate {
         this._facturasService.borraFacturaApi(this.id).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Factura eliminada:', resultado.datos);
+              this.toastr.success('Se ha eliminado '+resultado.datos.cliente, 'Factura eliminada correctamente!');
               this._route.navigate(['/facturas']);
             } else {
-              console.error('Error al eliminar la factura:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error eliminando factura');
             }
           },
           error: (error) => {
-            console.error('Error al borrar el valor:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error eliminando factura');
           },
           complete: () => {
             console.log('Operación completada.');
           },
         });
       }
-      // this._route.navigate(['/facturas']);
-    } else alert("El formulario tiene campos inválidos");
+    } else this.toastr.error("El formulario tiene campos inválidos", 'Error de validación');
   }
   cambiado(): void {
     this.formularioCambiado = true;
