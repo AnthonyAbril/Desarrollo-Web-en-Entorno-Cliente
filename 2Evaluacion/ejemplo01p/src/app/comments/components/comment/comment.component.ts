@@ -123,4 +123,8 @@ export class CommentComponent {
     return true;
   }
 
+  cancelar(event: Event): void {
+    event.preventDefault(); // Previene que el formulario intente enviarse
+    this._route.navigate(['/comentarios'], { queryParams: {} });
+  }
 }

@@ -134,4 +134,9 @@ export class EmpleadoComponent implements CanComponentDeactivate {
       [errorClass]: ngModel.touched && ngModel.invalid
     };
   }
+  
+  cancelar(event: Event): void {
+    event.preventDefault(); // Previene que el formulario intente enviarse
+    this._route.navigate(['/empleados'], { queryParams: {} });
+  }
 }
