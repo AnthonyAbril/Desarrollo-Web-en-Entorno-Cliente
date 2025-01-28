@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmpleadosService } from '../../empleados.service';
 import { CanComponentDeactivate } from '../../../can-component-deactivate.interface';
 import { NgForm, NgModel } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-empleados-empleado',
@@ -23,7 +24,7 @@ export class EmpleadoComponent implements CanComponentDeactivate {
   public formularioCambiado: boolean = false;
   public inputChecked: boolean = false; //Nueva vble para el checkbox
 
-  constructor(private _aroute: ActivatedRoute, private _empleadosService: EmpleadosService, private _route: Router) { }
+  constructor(private _aroute: ActivatedRoute, private _empleadosService: EmpleadosService, private _route: Router, private toastr: ToastrService) { }
   ngOnInit() {
     this.tipo = +this._aroute.snapshot.params['tipo'];
     this.id = +this._aroute.snapshot.params['id']; // Recibimos parámetro
@@ -36,18 +37,18 @@ export class EmpleadoComponent implements CanComponentDeactivate {
       this.traeEmpleado(this.id);
     }
   }
-  private traeEmpleado(id:number){
+  private traeEmpleado(id: number) {
     this._empleadosService.obtengoEmpleadoApi(id).subscribe({
       next: (resultado) => {
         if (resultado.mensaje == "OK") {
           this.empleadoact = resultado.datos;
           this.inputChecked = this.empleadoact.contratado == 1;
         } else {
-          console.error('Error al obtener el empleado:', resultado.mensaje);
+          this.toastr.error(resultado.mensaje, 'Error al obtener el empleado');
         }
       },
       error: (error) => {
-        console.error('Error al obtener el empleado:', error);
+        this.toastr.error(error, 'Error al obtener el empleado');
       },
       complete: () => {
         console.log('Operación completada.');
@@ -55,21 +56,23 @@ export class EmpleadoComponent implements CanComponentDeactivate {
     });
   }
   guardaEmpleado(): void {
-    if (this.empleadoForm!.valid || this.tipo == 2 ) { //El borrado era readonly
+    if (this.empleadoForm!.valid || this.tipo == 2) { //El borrado era readonly
       this.formularioCambiado = false;
       if (this.tipo == 0) {
         this.empleadoact.contratado = this.inputChecked ? 1 : 0;
         this._empleadosService.guardaNuevoEmpleadoApi(this.empleadoact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Empleado agregado:', resultado.datos);
+              this.toastr.success('El empleado se ha registrado con éxito!!', 'Añadido empleado', {positionClass: 'toast-bottom-right'});
               this._route.navigate(['/empleados']);
             } else {
-              console.error('Error al agregar el empleado:', resultado.errores);
+              // console.error('Error al agregar el empleado:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error guardando empleado');
             }
           },
           error: (error) => {
-            console.error('Error al agregar el empleado:', error.error.errores);
+            // console.error('Error al agregar el empleado:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error guardando empleado');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -81,14 +84,15 @@ export class EmpleadoComponent implements CanComponentDeactivate {
         this._empleadosService.modificaEmpleadoApi(this.id, this.empleadoact).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Empleado modificado:', resultado.datos);
+              this.toastr.success('Se ha modificado ' + resultado.datos.nombre,
+                'Empleado modificado correctamente!');
               this._route.navigate(['/empleados']);
             } else {
-              console.error('Error al modificar el empleado:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error modificando empleado');
             }
           },
           error: (error) => {
-            console.error('Error al modificar el empleado:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error modificando empleado');
           },
           complete: () => {
             console.log('Operación completada.');
@@ -99,21 +103,22 @@ export class EmpleadoComponent implements CanComponentDeactivate {
         this._empleadosService.borraEmpleadoApi(this.id).subscribe({
           next: (resultado) => {
             if (resultado.mensaje == "OK") {
-              console.log('Valor eliminado:', resultado.datos);
+              this.toastr.success('Se ha eliminado ' + resultado.datos.nombre,
+                'Empleado eliminado correctamente!');
               this._route.navigate(['/empleados']);
             } else {
-              console.error('Error al eliminar el empleado:', resultado.errores);
+              this.toastr.error(resultado.errores, 'Error eliminando empleado');
             }
           },
           error: (error) => {
-            console.error('Error al borrar el valor:', error.error.errores);
+            this.toastr.error(error.error.errores, 'Error eliminando empleado');
           },
           complete: () => {
             console.log('Operación completada.');
           },
         });
       }
-    } else alert("El formulario tiene campos inválidos");
+    } else this.toastr.error("El formulario tiene campos inválidos", 'Error de validación');
   }
   // Método que será llamado por el guard
   canDeactivate(): boolean {

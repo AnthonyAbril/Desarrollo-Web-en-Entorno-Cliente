@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { LoginService } from '../../login.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 })
 export class LoginComponent {
   public loginForm: FormGroup;
-  constructor(private _loginService: LoginService, private _route: Router, private _fb: FormBuilder) {
+  constructor(private _loginService: LoginService, private _route: Router, private _fb: FormBuilder, private toastr: ToastrService) {
     this.loginForm = this._fb.group({
       usuario: ['', [Validators.required]],
       contrasenya: ['', [Validators.required, Validators.minLength(5)]]
@@ -27,6 +28,7 @@ export class LoginComponent {
       this._loginService.login(this.loginForm.get('usuario')?.value, this.loginForm.get('contrasenya')?.value).subscribe({
         next: (resultado) => {
           this._loginService.saveToken(resultado.token);
+          this.toastr.success('Usuario autentificado correctamente', 'Usuario autentificado');
           this._route.navigate(['/bienvenido']);
         },
         error: (error) => {
@@ -41,9 +43,7 @@ export class LoginComponent {
           console.log('Operación completada.');
         },
       });
-    } else {
-      alert('Datos introducidos no válidos ');
-    }
+    } else this.toastr.error("Datos introducidos no válidos", 'Error de validación');
   }
   // Método para obtener los errores del campo si los necesitas
   get usuario() {

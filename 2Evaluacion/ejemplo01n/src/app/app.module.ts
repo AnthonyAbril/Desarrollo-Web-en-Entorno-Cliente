@@ -11,6 +11,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
 import { CommentsModule } from './comments/comments.module';
 import { EncabezadoComponent } from './encabezado/encabezado.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { EncabezadoComponent } from './encabezado/encabezado.component';
     FacturasModule,
     NominasModule,
     LoginModule,
-    CommentsModule
+    CommentsModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(),
   ],
   providers: [
     Title, 
